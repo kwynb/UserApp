@@ -1,0 +1,103 @@
+.welcome {
+    border-left: solid #d7760d 2px;
+}
+
+.set {
+    margin: 1rem 5rem !important;
+}
+
+.image {
+    color: #013244;
+}
+
+.name {
+    background-color: #d7760d;
+    border-radius: 0px 0px 15px 0px !important;
+    display: inline-flex !important;
+    padding: 0.5rem !important;
+    box-shadow: 2px 4px 0px #013244;
+    cursor: pointer;
+}
+
+.menu {
+    display: inline-block;
+    float: right;
+    border-radius: 0px !important;
+    background-color: #e0d9d5 !important;
+}
+
+.card {
+    background-color: #f8f8ea !important;
+    border-radius: 0px !important;
+    padding: 1rem 3px 0px 1.1rem;
+}
+
+.profile {
+    text-align: center;
+    margin: 1rem 0px 0px 3px;
+}
+
+.details {
+    color: black !important;
+    font-weight: bolder !important;
+}
+.search input {
+    float: right;
+    width: 80%;
+    border-radius: 0px;
+
+}
+
+.search button {
+    background-color: black;
+    float: right;
+    border-radius: 0px;
+}
+
+@media screen and (min-width: 990px){
+    .set {
+        margin: 1rem 10rem !important;
+    }
+}
+
+@media screen and (min-width: 1200px){
+    .set {
+        margin: 1rem 15rem !important;
+    }
+}
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.modal-main {
+    position: fixed;
+    background: white;
+    width: 40%;
+    height: auto;
+    top: 40%;
+    left: 50%;
+    transform: translate(-60%,-40%);
+    z-index: 1;
+}
+
+.display-block {
+    display: block;
+}
+
+.display-none {
+    display: none;
+}
+
+
+@media screen and (max-width: 800px){
+    .modal-main {
+        width: 60% !important;
+    }
+}
+

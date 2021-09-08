@@ -1,0 +1,36 @@
+.statement {
+    color: #01564c;
+    font-weight: bolder;
+    font-size: 2rem;
+    display: inline-block;
+}
+
+
+.myForm {
+    padding: 1rem;
+    border-left: solid 2px #01564c;
+}
+
+.btn {
+    background-color: #d7760d !important;
+    border: none !important;
+    font-weight: 800 !important;
+}
+
+.btn:hover, .btn:active {
+    background-color: rgba(1, 50, 68, 0.8) !important;
+    color: white !important;
+}
+
+.btn:active {
+    background-color: rgba(1, 50, 68, 0.9) !important;
+    color: white !important;
+}
+.new {
+    font-size: small;
+}
+
+hr {
+    color: grey;
+    size: 1rem !important;
+}

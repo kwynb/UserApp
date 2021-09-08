@@ -1,20 +1,21 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import Routing from '../routes/Routing';
+import {BrowserRouter as Router } from "react-router-dom";
+import Routing from "../routes/Routing";
+import Navbar from "../layouts/Navbar";
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
 
     render(){
         return(
-            <Router>
-                <Routing/>
-            </Router>
+            <div>
+                <Navbar/>
+                <Router>
+                    <Routing/>
+                </Router>
+            </div>
         );
     }
 }
+
 
 export default App;

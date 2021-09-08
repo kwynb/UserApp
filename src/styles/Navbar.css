@@ -1,0 +1,49 @@
+nav {
+    padding: 0px 0px 0px 20px;
+    flex-direction: row;
+    background-color: #013244;
+    color: white;
+    display: flex;
+    font-family: Montserrat, 'SansSerif';
+}
+
+hr {
+    size: 10px;
+    color: white;
+}
+
+.brand {
+    margin: 0.2rem;
+    font-family: 'Black Ops One', cursive;
+    font-size: 2rem;
+    text-align: center;
+    border: solid white;
+    border-top: 1px;
+    border-bottom: 1px;
+    padding: 0 7px 0 5px;
+    border-radius: 2px;
+}
+
+.user {
+    font-size: 1rem;
+}
+
+li {
+    list-style: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-set {
+    padding: 0rem 4rem;
+    border-radius: 0px 0px 0px 15px;
+    background-color: #d7760d;
+    display: inline-block;
+    color: black;
+    cursor: pointer;
+}
+.btn-set:hover, .btn-set:active {
+    background-color: #013244;
+    border-top: solid 2px white;
+    color: white;
+}

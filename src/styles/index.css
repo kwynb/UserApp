@@ -1,0 +1,30 @@
+* {
+    font-family: Montserrat, 'SansSerif', serif;
+    font-weight: bold;
+}
+
+.bg {
+    background-color: #e0d9d5;
+}
+
+.cover {
+    margin: 5rem 3rem;
+    padding: 1rem 2rem;
+    background: white;
+    box-shadow: 0 2px 7px 2px rgba(0, 0, 0, 0.26);
+    border-radius: 10px;
+}
+
+@media screen and (min-width: 600px){
+    .cover {
+        margin: 5rem 12rem !important;
+    }
+}
+
+
+@media screen and (min-width: 900px){
+    .cover {
+        margin: 5rem 20rem !important;
+    }
+}
+

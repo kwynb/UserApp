@@ -1,0 +1,103 @@
+.email {
+    margin: 2rem 6rem;
+    background: white;
+    width: 100%;
+    height: auto;
+}
+
+
+.user {
+    font-weight: bolder;
+    cursor: pointer;
+    color: #013244;
+    margin-right: 3rem;
+}
+
+.search input {
+    width: 50%;
+    border-radius: 0;
+    float:left;
+    margin-left: 1.5rem;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6) !important;
+}
+
+.modal-main {
+    position:fixed;
+    background: white;
+    width: 50%;
+    height: auto;
+    top: 40%;
+    left: 30% !important;
+    transform: translate(-70%,-40%);
+}
+
+.success {
+    width: 40% !important;
+}
+
+.display-block {
+    display: block;
+}
+
+.display-none {
+    display: none;
+}
+
+
+.form-label {
+    font-size: 0.9rem !important;
+}
+
+.head {
+    background-color: #013244;
+    color: #013244;
+    border-radius: 5px 5px 0 0;
+}
+
+.mail-menu {
+    color: #013244;
+}
+
+
+.sidenav {
+    height: 12rem;
+    margin-left: -1.8rem;
+    margin-top: 3rem !important;
+    width: 10rem !important;
+    position: fixed;
+    overflow-x: hidden;
+}
+
+.list {
+    margin-left: 10rem;
+}
+
+@media screen and (max-width: 800px){
+    .modal-main {
+        width: 60% !important;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .search input {
+        width: 40%;
+    }
+}
+
+@media screen and (max-width: 1000px){
+    .word {
+        display: none;
+    }
+
+}
+

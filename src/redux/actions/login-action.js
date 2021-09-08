@@ -6,3 +6,11 @@ export const onLogin = (loginDetails) => {
         payload: loginDetails,
     }
 }
+
+export const ON_LOGOUT_ACTION = "ON_LOGOUT_ACTION";
+export const onLogout = (loginDetails) => {
+    return {
+        type: ON_LOGOUT_ACTION,
+        payload: loginDetails,
+    }
+}

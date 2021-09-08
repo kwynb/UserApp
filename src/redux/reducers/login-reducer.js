@@ -1,7 +1,6 @@
-import {ON_LOGIN_ACTION} from "../actions/login-action";
+import {ON_LOGIN_ACTION, ON_LOGOUT_ACTION} from "../actions/login-action";
 
-
-const getDefaultState = () => ({});
+const getDefaultState = () => ({ user: {}, loggedIn: false });
 
 export const login = (state = getDefaultState(), action) => {
 
@@ -9,6 +8,9 @@ export const login = (state = getDefaultState(), action) => {
 
     switch (type) {
         case ON_LOGIN_ACTION: {
+            return Object.assign({}, state, {user: payload});
+        }
+        case ON_LOGOUT_ACTION: {
             return Object.assign({}, state, {user: payload});
         }
         default: {

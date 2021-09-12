@@ -1,6 +1,8 @@
 * {
     font-family: Montserrat, 'SansSerif', serif;
     font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .bg {

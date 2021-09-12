@@ -6,6 +6,12 @@ export function getEmailList() {
             'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" }});
 }
 
+export function getEmail(id) {
+    const baseURL = `http://localhost:8000/emails/get/${id}`;
+    return axios.get(baseURL, { headers: {
+            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" }});
+}
+
 export function getReceivedEmails(email) {
     const baseURL = 'http://localhost:8000/emails/received';
     return axios.get(baseURL, { headers: {
@@ -20,7 +26,8 @@ export function createMail(sender,recipient,subject, text) {
         sender: sender,
         recipient: recipient,
         subject: subject,
-        text: text
+        text: text,
+        unread: true
     })
     return axios.post(baseURL, body, { headers: {
             'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"}});

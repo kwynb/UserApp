@@ -13,3 +13,11 @@ export const onGetReceivedEmails = (emails) => {
         payload: emails,
     }
 }
+
+export const ON_GET_EMAIL_ACTION = "ON_GET_EMAIL_ACTION";
+export const onGetEmail = (email) => {
+    return {
+        type: ON_GET_EMAIL_ACTION,
+        payload: email,
+    }
+}

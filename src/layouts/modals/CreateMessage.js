@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import "../../styles/Email.css";
 
 class CreateMessage extends Component {
     render() {
@@ -8,11 +9,11 @@ class CreateMessage extends Component {
                     <h3 className="fw-bolder">New Message</h3><hr/>
                     <form className="mb-2">
                         <input
-                            type="text"
+                            type="email"
                             id="recipient"
                             placeholder="Recipient"
                             className="form-control d-inline fw-bolder mb-2"
-                            value={this.state.recipient|| ""}
+                            value={ this.props.recipient || ""}
                             onChange={this.props.handleRecipient}
                             required
                         /><br/>
@@ -21,22 +22,23 @@ class CreateMessage extends Component {
                             id="subject"
                             placeholder="Subject"
                             className="form-control d-inline fw-bolder mb-2"
-                            value={this.state.subject || ""}
+                            value={this.props.subject || ""}
                             onChange={this.props.handleSubject}
                             required
                         /><br/>
                         <textarea
-                            type="text"
                             id="message"
                             placeholder="Message"
                             className="form-control d-inline fw-bolder mb-2"
                             rows="6"
-                            value={this.state.text || ""}
+                            cols="50"
+                            value={this.props.message || ""}
                             onChange={this.props.handleMessage}
                             required
                         /><br/>
                     </form>
                     <div className="float-end">
+                        <button type="submit" className="btn me-2" onClick={this.props.handleDraft}>Save as Draft</button>
                         <button type="submit" className="btn me-2" onClick={this.props.handleSend}>Send</button>
                         <button type="button" className="btn" onClick={this.props.handleClose}>Cancel</button>
                     </div>

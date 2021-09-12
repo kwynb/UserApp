@@ -1,15 +1,20 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {onLogin} from "../redux/actions/login-action";
-import {onGetUserByUsername} from "../redux/actions/user-action";
-import {connect} from "react-redux";
-import {getUserByUsername} from "../services/user-service";
-import {createMail, getReceivedEmails} from "../services/mail-service";
+import {onGetUserByEmail, onGetUserByUsername} from "../redux/actions/user-action";
+import {getUserByEmail, getUserByUsername} from "../services/user-service";
+import {createMail, getEmail, getReceivedEmails} from "../services/mail-service";
+import {onGetEmail, onGetReceivedEmails} from "../redux/actions/email-action";
 import {RiUser3Fill} from "react-icons/ri";
-import "../styles/Email.css";
+import {IoIosArrowDroprightCircle} from "react-icons/io";
 import {IoMdAdd} from "react-icons/io";
+import {BiFilterAlt} from "react-icons/bi";
+import "../styles/Email.css";
 import MailList from "./MailList";
-import {onGetReceivedEmails} from "../redux/actions/email-action";
+import CreateMessage from "../layouts/modals/CreateMessage";
+import Mail from "./Mail";
+
 class Email extends Component {
     constructor(props) {
         super(props);
@@ -21,7 +26,10 @@ class Email extends Component {
             message: '',
             messageSent: false,
             messageError: false,
-            errorMessage: ''
+            errorMessage: '',
+            showMenu: false,
+            viewMail: false,
+            chosenMenu: "Inbox"
         }
     }
 
@@ -68,11 +76,14 @@ class Email extends Component {
         });
     }
 
+    handleDraft = () => {
+
+    }
     handleSend = () => {
         createMail(this.props.profile.email,
-             this.state.recipient,
-             this.state.subject,
-             this.state.message)
+            this.state.recipient,
+            this.state.subject,
+            this.state.message)
             .then((res) => {
                 console.log(res.data);
                 this.setState( {
@@ -100,6 +111,37 @@ class Email extends Component {
         })
     }
 
+    showInbox = () => {
+        this.setState({chosenMenu: "Inbox"})
+    }
+    showDrafts = () => {
+        this.setState({chosenMenu: "Drafts"})
+    }
+    showOutbox = () => {
+        this.setState({chosenMenu: "Outbox"})
+    }
+    showSent = () => {
+        this.setState({chosenMenu: "Sent"})
+    }
+
+    handleReply = () => {
+
+    }
+
+    handleForward = () => {
+
+    }
+
+    deleteMail = () => {
+
+    }
+
+    exitMail = () => {
+        this.setState({
+            viewMail: false
+        })
+    }
+
     render() {
         return (
             <div className="mail">
@@ -123,46 +165,9 @@ class Email extends Component {
                                 </div>
                             </div>
                         </div>}
-                        {this.state.showCreate && <div className="modal-backdrop">
-                            <div className="modal-main cover">
-                                <h3 className="fw-bolder">New Message</h3><hr/>
-                                <form className="mb-2">
-                                    <input
-                                        type="email"
-                                        id="recipient"
-                                        placeholder="Recipient"
-                                        className="form-control d-inline fw-bolder mb-2"
-                                        value={this.state.recipient|| ""}
-                                        onChange={this.handleRecipient}
-                                        required
-                                    /><br/>
-                                    <input
-                                        type="text"
-                                        id="subject"
-                                        placeholder="Subject"
-                                        className="form-control d-inline fw-bolder mb-2"
-                                        value={this.state.subject || ""}
-                                        onChange={this.handleSubject}
-                                        required
-                                    /><br/>
-                                    <textarea
-                                        id="message"
-                                        placeholder="Message"
-                                        className="form-control d-inline fw-bolder mb-2"
-                                        rows="6"
-                                        cols="50"
-                                        value={this.state.message || ""}
-                                        onChange={this.handleMessage}
-                                        required
-                                    /><br/>
-                                </form>
-                                <div className="float-end">
-                                    <button type="submit" className="btn me-2" onClick={this.handleSend}>Send</button>
-                                    <button type="button" className="btn" onClick={this.handleClose}>Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                        }
+                        {this.state.showCreate && <CreateMessage recipient={this.state.recipient} subject={this.state.subject} message={this.state.message}
+                                                                 handleRecipient={this.handleRecipient} handleSubject={this.handleSubject} handleMessage={this.handleMessage}
+                                                                 handleDraft={this.handleDraft} handleSend={this.handleSend} handleClose={this.handleClose}/>}
                         <div className="card-body">
                             <h3 className="float-end user mt-2" onClick={this.handleProfile}>
                                 <RiUser3Fill size="1.5rem" className="me-2" color="#013244"/><span className="user-name">{this.props.profile.firstName + " " + this.props.profile.lastName}</span></h3>
@@ -171,26 +176,50 @@ class Email extends Component {
                                 <input type="search" id="form1" className="form-control d-inline fw-bolder"
                                        placeholder="Search" onChange={this.handleSearch}/>
                             </form>
-                            <div className="sidenav">
-                                <h6 className="ms-3 form-label fw-bolder">Inbox</h6>
-                                <h6 className="ms-3 form-label fw-bolder">Drafts</h6>
-                                <h6 className="ms-3 form-label fw-bolder">Sent</h6>
-                            </div>
                             <div className="row mt-5 container">
-                                {/*<div className="col-md-3 sidenav">*/}
-                                {/*    <div className="head mb-2">Menu</div>*/}
-                                {/*    <h6 className="ms-3 form-label fw-bolder">Inbox</h6>*/}
-                                {/*    <h6 className="ms-3 form-label fw-bolder">Drafts</h6>*/}
-                                {/*    <h6 className="ms-3 form-label fw-bolder">Sent</h6>*/}
-                                {/*</div>*/}
-                                <div className="col-md-9 list">
-                                    <div className="head mb-2">Menu</div>
-                                        {this.props.mails.map((mail) => <MailList key={mail.id} data={mail}/>)}
+                                <div className="ms-0 col-sm-4 list">
+                                    <div className="head mb-2">Mails</div>
+                                    <div className="d-inline">
+                                        <button className="float-start chosen" onClick={()=>{this.setState({showMenu: !this.state.showMenu})}}>{this.state.chosenMenu}</button>
+                                        <button className="float-start menu d-inline" onClick={() => this.setState({showMenu: !this.state.showMenu})}><IoIosArrowDroprightCircle size="1.5rem"/></button>
+                                        {this.state.showMenu && <div className="mt-2 float-start sidenav">
+                                            <h6 className="ms-3 form-label fw-bolder sidenav-menu" onClick={this.showInbox}>Inbox</h6>
+                                            <h6 className="ms-3 form-label fw-bolder sidenav-menu" onClick={this.showDrafts}>Drafts</h6>
+                                            <h6 className="ms-3 form-label fw-bolder sidenav-menu" onClick={this.showOutbox}>Outbox</h6>
+                                            <h6 className="ms-3 form-label fw-bolder sidenav-menu" onClick={this.showSent}>Sent</h6>
+                                        </div>}
+                                        <button className="float-end menu d-inline"><BiFilterAlt/></button>
+                                    </div>
+                                    <div className="scrollbar scrollbar-black mt-2">
+                                        {this.props.mails.map((mail) => <div onClick={() => {
+                                            this.setState({
+                                                viewMail: true
+                                            })
+                                            getEmail(mail.id)
+                                                .then((res)=> {console.log(res.data);
+                                                    this.props.onGetEmail(res.data)})
+                                                .catch((err)=> console.error(err.response));
+                                            getUserByEmail(mail.sender).then((res) => {
+                                                console.log(res.data);
+                                                this.props.onGetUserByEmail(res.data);
+                                            }).catch((err)=> console.error(err.response));
+                                        }}><MailList key={mail.id} data={mail}/></div>)}
+                                    </div>
+                                </div>
+                                <div className="col-sm-8 d-inline-block">
+                                    <div className="head mb-2">Mail</div>
+                                    <div>
+                                        { this.state.viewMail ? <Mail handleClose={this.exitMail}
+                                                                      handleReply={this.handleReply}
+                                                                      handleDelete={this.deleteMail}
+                                                                      handleForward={this.handleForward}/>
+                                            :<div className="mt-2 d-flex justify-content-center">
+                                                <div>Click a mail to read.</div>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                            {/*<div className="mt-5 container">*/}
-                            {/*    {this.props.mails.map((mail) => <MailList key={mail.id} data={mail}/>)}*/}
-                            {/*</div>*/}
                         </div>
                     </div> : <div>{this.props.history.push("/")}</div>}
             </div>
@@ -202,15 +231,18 @@ const mapStateToProps = (state) => {
     return {
         login: state.login.user,
         profile: state.users.user,
-        mails: state.emails.emails
-    };
+        mails: state.emails.emails,
+        mail: state.emails.mail
+    }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         onLogin,
         onGetUserByUsername,
-        onGetReceivedEmails
+        onGetReceivedEmails,
+        onGetUserByEmail,
+        onGetEmail
     }, dispatch);
 };
 

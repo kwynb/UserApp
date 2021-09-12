@@ -1,37 +1,15 @@
-.banner {
-    padding: 0.1rem 0.5rem;
-    background-color: #013244 !important;
-}
-
-.side, .content {
-    margin: 0;
-    padding: 1rem 1rem;
-    background-color: white !important;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.26);
-    border-radius: 0;
-}
-
-.title {
-    font-size: 0.8rem;
-    cursor: pointer;
-    align-self: baseline;
-    text-align: center;
-}
-
-.title:hover, .title:active {
-    color: #035c81;
-}
-
-.label {
-    font-family: 'Open Sans Condensed', sans-serif;
-    font-weight: 300;
+.mail-body {
+    font-family: "Open Sans" !important;
     font-size: 1rem;
+    text-align: justify;
 }
 
-.create {
-    background-color: #015273;
-    border-radius: 12px;
-    padding: 0.5rem 0.3rem;
-    text-align: center;
-    color: white;
+.sender {
+    font-family: "Open Sans" !important;
+    font-size: 0.9rem;
+}
+
+.sender-mail {
+    font-family: "Open Sans";
+    font-size: 0.8rem;
 }

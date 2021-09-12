@@ -118,7 +118,7 @@ class Profile extends Component {
                             handleNew={this.handleNewPassword} handleConfirm={this.handleConfirmPassword} handleClose={this.hideModal}/>}
                         {this.state.deactivate && <Deactivation handleClose={this.hideModal} handleDelete={this.handleDelete}/>}
                         <h3 className="btn name" onClick={this.handleProfile}>{'@' + this.props.profile.username}</h3>
-                        <h3 className="btn menu d-inline-block mb-2 ms-2" onClick={this.handleMail}>Mail</h3>
+                        <h3 className="btn direct-mail d-inline-block mb-2 ms-2" onClick={this.handleMail}>Mail</h3>
                         <hr className="mt-0"/><br/>
                         <div className="card mb-3">
                             <div className="card-body">

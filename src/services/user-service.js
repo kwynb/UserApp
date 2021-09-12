@@ -76,6 +76,14 @@ export function getUserByUsername(username) {
     });
 }
 
+export function getUserByEmail(email) {
+    const baseURL = 'http://localhost:8080/users/get/email?';
+    return axios.get(baseURL, { headers: {
+            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
+        params: { email }
+    });
+}
+
 export function getUsers() {
     const baseURL = 'http://localhost:8080/users/get';
     return axios.get(baseURL, { headers: {

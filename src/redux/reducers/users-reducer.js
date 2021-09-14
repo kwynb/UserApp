@@ -3,9 +3,9 @@ import {
     ON_GET_USER_ACTION,
     ON_GET_USER_BY_USERNAME_ACTION,
     ON_UPDATE_USER_ACTION,
-    ON_GET_USER_BY_EMAIL_ACTION} from "../actions/user-action";
+} from "../actions/user-action";
 
-const getDefaultState = () => ({ users: [], user: {}, mailUser: {}});
+const getDefaultState = () => ({ users: [], user: {}, mailUser:{}});
 
 export const users = (state = getDefaultState(), action) => {
 
@@ -29,7 +29,6 @@ export const users = (state = getDefaultState(), action) => {
         }
     }
 }
-
 export const mailUsers = (state = getDefaultState(), action) => {
 
     const {type, payload} = action;

@@ -6,6 +6,22 @@ export const onGetEmails = (emails) => {
     }
 }
 
+export const ON_GET_DRAFTS_ACTION = "ON_GET_DRAFTS_ACTION";
+export const onGetDrafts = (emails) => {
+    return {
+        type: ON_GET_DRAFTS_ACTION,
+        payload: emails,
+    }
+}
+
+export const ON_GET_SENT_EMAILS_ACTION = "ON_GET_SENT_EMAILS_ACTION";
+export const onGetSentEmails = (emails) => {
+    return {
+        type: ON_GET_SENT_EMAILS_ACTION,
+        payload: emails,
+    }
+}
+
 export const ON_GET_RECEIVED_EMAILS_ACTION = "ON_GET_RECEIVED_EMAILS_ACTION";
 export const onGetReceivedEmails = (emails) => {
     return {

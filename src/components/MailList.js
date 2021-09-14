@@ -9,7 +9,7 @@ class MailList extends Component {
 
 
     render() {
-        const time = this.props.data.createdAt.substr(11,15).split(":").reverse();
+        const time = this.props.data.lastModified.substr(11,15).split(":").reverse();
         const format = () => {
             if (time[2] > 12) {
                 return "PM";
@@ -23,11 +23,12 @@ class MailList extends Component {
                     <tbody>
                     <tr>
                         <td className="mail-select mt-0">
-                            <input type="checkbox"/>
+                            <input type="checkbox" className="cursor"/>
                         </td>
                         <td className="w-100">
                             <h3 className="float-end label text-dark small">{creationTime}</h3>
-                            <h3 className="label text-black">{this.props.data.sender.substr(0,18) + "..."}</h3>
+                            {this.props.chosenMenu === "Inbox" && <h3 className="label text-black">{this.props.data.sender.substr(0,18) + "..."}</h3>}
+                            {this.props.chosenMenu !== "Inbox" && <h3 className="label text-black">{this.props.data.recipient.substr(0,18) + "..."}</h3>}
                             <h6 className="label text-secondary small">{this.props.data.text.substr(0,25) + "..."}</h6>
                         </td>
                     </tr>

@@ -5,12 +5,14 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {onLogin} from "../redux/actions/login-action";
 import "../styles/Login.css";
+
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
             username: '',
             password: '',
+            showPassword: false,
             isLoggedIn: false,
         };
     }
@@ -50,6 +52,12 @@ class Login extends Component {
         this.props.history.push('/register');
     }
 
+    handleShowPassword = () => {
+        this.setState({
+            showPassword: !this.state.showPassword
+        })
+    }
+
     render() {
 
         return (
@@ -72,13 +80,19 @@ class Login extends Component {
                         <div className="form-group mb-2">
                             <label htmlFor="password">Password: </label>
                             <input
-                                type="password"
+                                type={this.state.showPassword ? "text": "password"}
                                 id="password"
                                 placeholder="Your password"
                                 className="form-control d-inline fw-bolder"
                                 onChange={this.handlePasswordInput}
                                 required
                             /><br/>
+                        </div>
+                        <div className="form-check mb-2">
+                            <input type="checkbox" className="form-check-input cursor" id="exampleCheck1" onClick={this.handleShowPassword}/>
+                                <label className="form-check-label" htmlFor="exampleCheck1">
+                                    {this.state.showPassword ? <div className="password">Hide Password</div>
+                                        : <div className="password">Show Password</div>}</label>
                         </div>
                         <button type="submit" className="btn mt-2 w-100">Login</button>
                     </form>

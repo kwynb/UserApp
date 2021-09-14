@@ -11,9 +11,9 @@ class PasswordChange extends Component {
                         <label className="form-label col-md-5 mb-0"> New Password:</label>
                         <div className="col-md-7 text-secondary">
                             <input
-                                type="password"
+                                type={this.props.showPassword ? "text": "password"}
                                 id="newpassword"
-                                className="form-control d-inline"
+                                className="form-control d-inline fw-bolder"
                                 onChange={this.props.handleNew}
                                 required
                             /><br/>
@@ -23,9 +23,9 @@ class PasswordChange extends Component {
                         <label className="form-label col-md-5 mb-0"> Confirm Password:</label>
                         <div className="col-md-7 text-secondary">
                             <input
-                                type="password"
+                                type={this.props.showPassword ? "text": "password"}
                                 id="confirmpassword"
-                                className="form-control d-inline"
+                                className="form-control d-inline fw-bolder"
                                 onChange={this.props.handleConfirm}
                                 required
                             /><br/>
@@ -36,7 +36,7 @@ class PasswordChange extends Component {
                         <label className="form-label col-md-5 mb-0"> Old Password:</label>
                         <div className="col-md-7 text-secondary">
                             <input
-                                type="password"
+                                type={this.props.showPassword ? "text": "password"}
                                 id="oldpassword"
                                 placeholder="Your password"
                                 className="form-control d-inline fw-bolder"
@@ -44,6 +44,12 @@ class PasswordChange extends Component {
                                 required
                             /><br/>
                         </div>
+                    </div>
+                    <div className="form-check mb-2">
+                        <input type="checkbox" className="form-check-input cursor" id="exampleCheck1" onClick={this.props.handleShowPassword}/>
+                        <label className="form-check-label" htmlFor="exampleCheck1">
+                            {this.props.showPassword ? <div className="password">Hide Password</div>
+                                : <div className="password">Show Password</div>}</label>
                     </div>
                     <div className="float-end mt-3">
                         <button type="button" className="btn me-2" onClick={this.props.handleChange}>Confirm</button>

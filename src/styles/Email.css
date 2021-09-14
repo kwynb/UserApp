@@ -145,7 +145,6 @@
 
 .sidenav-menu {
     padding: .2rem 0.1rem;
-    cursor:pointer;
 }
 
 .sidenav-menu:hover, .sidenav-menu:active {
@@ -155,7 +154,6 @@
 .sidenav-menu:active {
     color: #a25909;
 }
-
 
 .list {
     margin-left: 10rem;

@@ -22,15 +22,6 @@ export const onGetUserByUsername = (user) => {
     }
 }
 
-export const ON_GET_USER_BY_EMAIL_ACTION = "ON_GET_USER_BY_EMAIL_ACTION";
-export const onGetUserByEmail = (mailUser) => {
-    return {
-        type: ON_GET_USER_BY_EMAIL_ACTION,
-        payload: mailUser,
-    }
-}
-
-
 export const ON_UPDATE_USER_ACTION = "ON_UPDATE_USER_ACTION";
 export const onUpdateUser = (user) => {
     return {

@@ -11,11 +11,13 @@ import Deactivation from "../layouts/modals/Deactivation";
 import PasswordChange from "../layouts/modals/PasswordChange";
 import "../styles/Profile.css";
 import "../styles/Modal.css";
+
 class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
             changePass: false,
+            showPassword: false,
             deactivate: false,
             newPassword: '',
             confirmPass: '',
@@ -27,7 +29,13 @@ class Profile extends Component {
             this.props.onGetUserByUsername(res.data);
         }).catch((err) => console.error(err.response));
     }
-
+    componentDidUpdate(prevProps, prevState,SS) {
+        if (prevProps.profile !== this.props.profile) {
+            getUserByUsername(this.props.user.username).then((res) => {
+                this.props.onGetUserByUsername(res.data);
+            }).catch((err) => console.error(err.response));
+        }
+    }
     handleProfile = () => {
         this.props.history.push("/profile");
     }
@@ -79,6 +87,13 @@ class Profile extends Component {
         })
     }
 
+
+    handleShowPassword = () => {
+        this.setState({
+            showPassword: !this.state.showPassword
+        })
+    }
+
     handleChangePass = () => {
         const date = this.props.profile.birthDay.split("/").reverse();
         const birthday = date[0] + "-" + date[2] + "-" + date[1];
@@ -114,8 +129,8 @@ class Profile extends Component {
             <div className="set">
                 {this.props.loggedIn ?
                     <div className="m-0 container">
-                        {this.state.changePass && <PasswordChange handleChange={this.handleChangePass}  handleOld={this.handleOldPassword}
-                            handleNew={this.handleNewPassword} handleConfirm={this.handleConfirmPassword} handleClose={this.hideModal}/>}
+                        {this.state.changePass && <PasswordChange showPassword={this.state.showPassword} handleChange={this.handleChangePass}
+                          handleShowPassword={this.handleShowPassword} handleOld={this.handleOldPassword} handleNew={this.handleNewPassword} handleConfirm={this.handleConfirmPassword} handleClose={this.hideModal}/>}
                         {this.state.deactivate && <Deactivation handleClose={this.hideModal} handleDelete={this.handleDelete}/>}
                         <h3 className="btn name" onClick={this.handleProfile}>{'@' + this.props.profile.username}</h3>
                         <h3 className="btn direct-mail d-inline-block mb-2 ms-2" onClick={this.handleMail}>Mail</h3>

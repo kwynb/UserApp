@@ -16,8 +16,9 @@ class Register extends Component {
             email: '',
             username: '',
             password: '',
+            maxDate: '',
             onUpdate: false,
-            maxDate: ''
+            showPassword: false
         };
     }
 
@@ -86,6 +87,12 @@ class Register extends Component {
         })
     }
 
+    handleShowPassword = () => {
+        this.setState({
+            showPassword: !this.state.showPassword
+        })
+    }
+
     onEdit = (event) => {
         event.preventDefault();
         if (this.state.password === this.props.profile.password) {
@@ -127,6 +134,7 @@ class Register extends Component {
     onCancelRegister = () => {
         this.props.history.push("/login");
     }
+
 
     render() {
         return (
@@ -200,13 +208,19 @@ class Register extends Component {
                         <div className="form-group mb-3 col-md-6">
                             <label htmlFor="password">Confirm Password: </label>
                             <input
-                                type="password"
+                                type={this.state.showPassword ? "text": "password"}
                                 id="password"
                                 placeholder="Your password"
                                 className="form-control d-inline fw-bolder"
                                 onChange={this.handlePasswordInput}
                                 required
                             /><br/>
+                            <div className="form-check mb-2">
+                                <input type="checkbox" className="form-check-input cursor" id="exampleCheck1" onClick={this.handleShowPassword}/>
+                                <label className="form-check-label" htmlFor="exampleCheck1">
+                                    {this.state.showPassword ? <div className="password">Hide Password</div>
+                                        : <div className="password">Show Password</div>}</label>
+                            </div>
                         </div>
                     </div>
                     <button type="submit" className="btn w-100">Save</button>
@@ -277,11 +291,17 @@ class Register extends Component {
                         <input
                             type="password"
                             id="password"
-                            placeholder="Your password"
+                            type={this.state.showPassword ? "text": "password"}
                             className="form-control d-inline fw-bolder"
                             onChange={this.handlePasswordInput}
                             required
                         /><br/>
+                        <div className="form-check mb-2">
+                            <input type="checkbox" className="form-check-input cursor" id="exampleCheck1" onClick={this.handleShowPassword}/>
+                            <label className="form-check-label" htmlFor="exampleCheck1">
+                                {this.state.showPassword ? <div className="password">Hide Password</div>
+                                    : <div className="password">Show Password</div>}</label>
+                        </div>
                     </div>
                     </div>
                     <button type="submit" className="btn w-100">Register</button>

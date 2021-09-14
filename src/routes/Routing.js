@@ -3,7 +3,6 @@ import {Switch, Route} from "react-router-dom";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Profile from "../components/Profile";
-import Mail from "../components/Mail";
 import Contacts from "../components/Contacts";
 import Email from "../components/Email";
 

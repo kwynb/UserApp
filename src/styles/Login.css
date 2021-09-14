@@ -34,3 +34,9 @@ hr {
     color: grey;
     size: 1rem !important;
 }
+
+.password {
+    font-size: 0.9rem;
+    font-weight: normal;
+    font-family: "Open Sans", sans-serif;
+}

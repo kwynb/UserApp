@@ -1,15 +1,25 @@
+.general {
+    cursor: context-menu;
+}
+
 .mail-body {
-    font-family: "Open Sans" !important;
+    font-family: "Open Sans", sans-serif !important;
     font-size: 1rem;
     text-align: justify;
 }
 
 .sender {
-    font-family: "Open Sans" !important;
+    font-family: "Open Sans", sans-serif!important;
     font-size: 0.9rem;
 }
 
 .sender-mail {
-    font-family: "Open Sans";
+    font-family: "Open Sans", sans-serif;
     font-size: 0.8rem;
+}
+
+.datetime {
+    font-family: "Open Sans", sans-serif !important;
+    font-size: 0.8rem !important;
+    color: gray;
 }

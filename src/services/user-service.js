@@ -75,7 +75,6 @@ export function getUserByUsername(username) {
             params: { username }
     });
 }
-
 export function getUserByEmail(email) {
     const baseURL = 'http://localhost:8080/users/get/email?';
     return axios.get(baseURL, { headers: {

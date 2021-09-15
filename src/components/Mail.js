@@ -18,11 +18,11 @@ class Mail extends Component {
                 {this.props.mailSet.chosenMenu !== "Drafts" && <button className="menu float-end" onClick={this.props.handleForward}><RiShareForwardLine size="1.3rem"/></button>}
                 <button className="menu float-end" onClick={this.props.handleDelete}><RiDeleteBin5Line size="1.2rem"/></button>
                 {this.props.mailSet.chosenMenu === "Inbox" && <button className="menu float-end" onClick={this.props.handleReply}><ImReply size="1.1rem"/></button>}
-                {this.props.mailSet.chosenMenu === "Drafts" && <button className="menu float-end" onClick={this.props.handleReply}><FiEdit2 size="1.1rem"/></button>}
+                {this.props.mailSet.chosenMenu === "Drafts" && <button className="menu float-end" onClick={this.props.handleEdit}><FiEdit2 size="1.1rem"/></button>}
 
                 <div className="container">
                         <table className="d-flex justify-content-start mt-2">
-                            <tbody>
+                            <tbody className="mt-5">
                             <tr>
                                 <td>
                                     <button className="menu"><RiMapPinUserLine size="3rem"/></button>

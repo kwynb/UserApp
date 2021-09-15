@@ -29,7 +29,7 @@ class MailList extends Component {
                             <h3 className="float-end label text-dark small">{creationTime}</h3>
                             {this.props.chosenMenu === "Inbox" && <h3 className="label text-black">{this.props.data.sender.substr(0,18) + "..."}</h3>}
                             {this.props.chosenMenu !== "Inbox" && <h3 className="label text-black">{this.props.data.recipient.substr(0,18) + "..."}</h3>}
-                            <h6 className="label text-secondary small">{this.props.data.text.substr(0,25) + "..."}</h6>
+                            <h6 className="label text-secondary small text-space">{this.props.data.text.substr(0,25) + "..."}</h6>
                         </td>
                     </tr>
                     </tbody>

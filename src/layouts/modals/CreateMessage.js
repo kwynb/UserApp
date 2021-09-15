@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 import "../../styles/Email.css";
+import {bindActionCreators} from "redux";
+import {onGetUserByEmail} from "../../redux/actions/mailuser-action";
+import {onGetEmail} from "../../redux/actions/email-action";
+import {connect} from "react-redux";
 
 class CreateMessage extends Component {
     render() {
@@ -12,8 +16,8 @@ class CreateMessage extends Component {
                             type="email"
                             id="recipient"
                             placeholder="Recipient"
-                            className="form-control d-inline fw-bolder mb-2"
-                            value={ this.props.recipient || ""}
+                            className="form-control d-inline fw-normal mb-2 mail-body"
+                            value={ this.props.mailSet.recipient || ""}
                             onChange={this.props.handleRecipient}
                             required
                         /><br/>
@@ -21,18 +25,18 @@ class CreateMessage extends Component {
                             type="text"
                             id="subject"
                             placeholder="Subject"
-                            className="form-control d-inline fw-bolder mb-2"
-                            value={this.props.subject || ""}
+                            className="form-control d-inline fw-normal mb-2 mail-body"
+                            value={this.props.mailSet.subject || ""}
                             onChange={this.props.handleSubject}
                             required
                         /><br/>
                         <textarea
                             id="message"
                             placeholder="Message"
-                            className="form-control d-inline fw-bolder mb-2"
+                            className="form-control d-inline fw-normal mb-2 mail-body"
                             rows="6"
                             cols="50"
-                            value={this.props.message || ""}
+                            value={this.props.mailSet.message || ""}
                             onChange={this.props.handleMessage}
                             required
                         /><br/>
@@ -48,4 +52,18 @@ class CreateMessage extends Component {
     }
 }
 
-export default CreateMessage;
+const mapStateToProps = (state) => {
+    return {
+        mailUser: state.mailUsers.mailUser,
+        mail: state.emails.email
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        onGetUserByEmail,
+        onGetEmail,
+    }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateMessage);

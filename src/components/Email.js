@@ -5,7 +5,15 @@ import {onLogin} from "../redux/actions/login-action";
 import {onGetUserByUsername} from "../redux/actions/user-action";
 import {onGetUserByEmail} from "../redux/actions/mailuser-action";
 import {getUserByEmail, getUserByUsername} from "../services/user-service";
-import {createMail, deleteEmail, getDrafts, getEmail, getReceivedEmails, getSentEmails} from "../services/mail-service";
+import {
+    createMail,
+    deleteEmail,
+    getDrafts,
+    getEmail,
+    getReceivedEmails,
+    getSentEmails,
+    updateMail
+} from "../services/mail-service";
 import {onGetEmail, onGetSentEmails, onGetReceivedEmails, onGetDrafts} from "../redux/actions/email-action";
 import {RiUser3Fill} from "react-icons/ri";
 import {IoIosArrowDroprightCircle} from "react-icons/io";
@@ -16,7 +24,6 @@ import MailList from "./MailList";
 import CreateMessage from "../layouts/modals/CreateMessage";
 import Mail from "./Mail";
 
-// noinspection DuplicatedCode
 class Email extends Component {
     constructor(props) {
         super(props);
@@ -102,18 +109,19 @@ class Email extends Component {
         this.setState({
             message: event.target.value
         });
-        console.log(this.state.message);
     }
 
     handleDraft = () => {
         this.setState({
             deliveryStatus: "draft"
-        })
-        createMail(this.props.profile.email,
-            this.state.recipient,
-            this.state.subject,
-            this.state.message, this.state.deliveryStatus)
-            .then((res) => {
+        });
+        if (this.props.mail.deliveryStatus !== "sent") {
+            updateMail(this.props.mail.id,
+                this.props.profile.email,
+                this.state.recipient,
+                this.state.subject,
+                this.state.message,
+                "draft").then(() => {
                 this.setState( {
                     sender: '',
                     recipient: '',
@@ -121,6 +129,28 @@ class Email extends Component {
                     message: '',
                     showCreate: false
                 })})
+                .catch((err) => {
+                    this.setState({
+                        response: err.response.data.message,
+                        messageError: true,
+                        showCreate: false
+                    });
+                })
+            return
+        }
+        createMail(this.props.profile.email,
+            this.state.recipient,
+            this.state.subject,
+            this.state.message, "draft")
+            .then(() => {
+                this.setState({
+                    sender: '',
+                    recipient: '',
+                    subject: '',
+                    message: '',
+                    showCreate: false
+                })
+            })
             .catch((err) => {
                 this.setState({
                     response: err.response.data.message,
@@ -128,23 +158,47 @@ class Email extends Component {
                     showCreate: false
                 });
             })
+
     }
 
     handleSend = () => {
         this.setState({
             deliveryStatus: "sent"
-        })
-        createMail(this.props.profile.email,
-             this.state.recipient,
-             this.state.subject,
-             this.state.message, this.state.deliveryStatus)
-            .then((res) => {
+        });
+        if (this.props.mail.deliveryStatus === "draft") {
+            updateMail(this.props.mail.id,
+                this.props.profile.email,
+                this.state.recipient,
+                this.state.subject,
+                this.state.message,
+                "sent").then(() => {
                 this.setState( {
                     sender: '',
                     recipient: '',
                     subject: '',
                     message: '',
-                    deliveryStatus: '',
+                    messageSent: true,
+                    showCreate: false
+                })})
+                .catch((err) => {
+                    this.setState({
+                        response: err.response.data.message,
+                        messageError: true,
+                        showCreate: false
+                    });
+                })
+            return
+        }
+        createMail(this.props.profile.email,
+             this.state.recipient,
+             this.state.subject,
+             this.state.message, "sent")
+            .then(() => {
+                this.setState( {
+                    sender: '',
+                    recipient: '',
+                    subject: '',
+                    message: '',
                     messageSent: true,
                     showCreate: false
                 })})
@@ -159,6 +213,10 @@ class Email extends Component {
 
     handleClose = () => {
         this.setState({
+            recipient: '',
+            sender: '',
+            subject: '',
+            message: '',
             deliveryStatus: '',
             messageDeleted: false,
             messageSent: false,
@@ -172,22 +230,48 @@ class Email extends Component {
             viewMail: false,
             chosenMenu: "Inbox"})
     }
+
     showDrafts = () => {
         this.setState({
             viewMail: false,
             chosenMenu: "Drafts"})
     }
+
     showSent = () => {
         this.setState({
             viewMail: false,
             chosenMenu: "Sent"})
     }
 
-    forwardMail = () => {
-
+    editMail = () => {
+        this.setState({
+            showCreate: true,
+            recipient: this.props.mail.recipient,
+            sender: this.props.mail.sender,
+            subject: this.props.mail.subject,
+            message: this.props.mail.text,
+        })
     }
-    replyMail = () => {
 
+    forwardMail = () => {
+        this.setState({
+            showCreate: true,
+            subject: this.props.mail.subject,
+            message: `\n\n-------\nForwarded from: <` + this.props.mail.sender + `>\n\n` + this.props.mail.text
+        })
+    }
+
+    replyMail = () => {
+        if (this.props.mail.subject !== "") {
+            this.setState({
+                subject: `RE: ` + this.props.mail.subject
+            });
+        }
+        this.setState({
+            showCreate: true,
+            recipient: this.props.mail.sender,
+
+        })
     }
 
     deleteMail = () => {
@@ -211,7 +295,7 @@ class Email extends Component {
     exitMail = () => {
         this.setState({
             viewMail: false
-        })
+        });
     }
     render() {
 
@@ -246,7 +330,9 @@ class Email extends Component {
                         {this.state.messageError && <div className="modal-backdrop">
                             <div className="modal-main cover success">
                                 {this.state.messageDeleted && <h3 className="fw-bolder">Message Not Deleted</h3>}
-                                {this.state.messageSent === false && <h3 className="fw-bolder">Message Not Sent</h3>}
+                                {this.state.messageSent === false && this.state.deliveryStatus !== "draft" && <h3 className="fw-bolder">Message Not Sent</h3>}
+                                {this.state.deliveryStatus === "draft"  && <h3 className="fw-bolder">Message Not Saved.</h3>}
+
                                 <hr/>
                                 {this.state.messageDeleted &&<div>{this.state.response}</div>}
                                 <div className="float-end">
@@ -254,9 +340,12 @@ class Email extends Component {
                                 </div><br/><br/>
                             </div>
                         </div>}
-                        {this.state.showCreate && <CreateMessage recipient={this.state.recipient} subject={this.state.subject} message={this.state.message}
-                                                                 handleRecipient={this.handleRecipient} handleSubject={this.handleSubject} handleMessage={this.handleMessage}
-                                                                 handleDraft={this.handleDraft} handleSend={this.handleSend} handleClose={this.handleClose}/>}
+                        {this.state.showCreate && <CreateMessage mailSet={{
+                                        recipient: this.state.recipient,
+                                        subject: this.state.subject,
+                                        message: this.state.message}}
+                                        handleRecipient={this.handleRecipient} handleSubject={this.handleSubject} handleMessage={this.handleMessage}
+                                        handleDraft={this.handleDraft} handleSend={this.handleSend} handleClose={this.handleClose}/>}
                         <div className="card-body">
                             <h3 className="float-end user mt-2" onClick={this.handleProfile}>
                                 <RiUser3Fill size="1.5rem" className="me-2" color="#013244"/><span className="user-name">{this.props.profile.firstName + " " + this.props.profile.lastName}</span></h3>
@@ -272,11 +361,13 @@ class Email extends Component {
                                         <button className="float-start chosen" onClick={()=>{this.setState({showMenu: !this.state.showMenu})}}>{this.state.chosenMenu}</button>
                                         <button className="float-start menu d-inline" onClick={() => this.setState({showMenu: !this.state.showMenu})}><IoIosArrowDroprightCircle size="1.5rem"/></button>
                                         {this.state.showMenu && <div className="mt-2 float-start sidenav">
-                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu" onClick={this.showInbox}>Inbox</h6>
-                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu" onClick={this.showDrafts}>Drafts</h6>
-                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu" onClick={this.showSent}>Sent</h6>
+                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showInbox}>Inbox</h6>
+                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showDrafts}>Drafts</h6>
+                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showSent}>Sent</h6>
                                         </div>}
-                                        <button className="float-end menu d-inline"><BiFilterAlt/></button>
+                                        <button className="float-end menu d-inline">
+                                            <BiFilterAlt/>
+                                        </button>
                                     </div>
                                     <div className="scrollbar scrollbar-black mt-2">
                                         {this.props.mails.map((mail) =>
@@ -335,6 +426,7 @@ class Email extends Component {
                                                                 chosenMenu: this.state.chosenMenu
                                                             }}
                                                               handleClose={this.exitMail}
+                                                              handleEdit={this.editMail}
                                                               handleReply={this.replyMail}
                                                               handleDelete={this.deleteMail}
                                                               handleForward={this.forwardMail}/>

@@ -3,7 +3,7 @@
     font-weight: bold;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    white-space: pre-line;
+    white-space: normal;
     margin: 0;
     padding: 0;
 }
@@ -18,7 +18,8 @@
     background-color: #e0d9d5;
 }
 
-.cover {
+.cover, .rcover {
+    justify-self: center !important;
     margin: 5rem 3rem;
     padding: 1rem 2rem;
     background: white;
@@ -28,14 +29,29 @@
 
 @media screen and (min-width: 600px){
     .cover {
-        margin: 5rem 12rem !important;
+        margin: 5rem 10rem !important;
+        justify-self: center;
     }
 }
 
+@media screen and (min-width: 770px){
+    .cover, .rcover {
+        margin: 5rem 12rem !important;
+        justify-self: center;
+    }
+}
 
 @media screen and (min-width: 900px){
     .cover {
-        margin: 5rem 20rem !important;
+        margin: 5rem auto !important;
+        width: 40% !important;
+    }
+}
+
+@media screen and (min-width: 1000px){
+    .cover {
+        margin: 5rem auto !important;
+        width: 40% !important;
     }
 }
 

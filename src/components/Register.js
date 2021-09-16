@@ -138,7 +138,7 @@ class Register extends Component {
 
     render() {
         return (
-            <div className="cover">
+            <div className="rcover">
                 <h3 className="statement">QuickLOG</h3>
                 <button type="button" className="btn w-25 d-inline float-end" onClick={this.state.onUpdate? this.onCancelEdit : this.onCancelRegister}>Cancel</button>
                 {this.state.onUpdate ? <form onSubmit={this.onEdit} className="myForm mb-3">

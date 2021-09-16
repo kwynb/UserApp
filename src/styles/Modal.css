@@ -9,14 +9,16 @@
 }
 
 .modal-main {
-    position: fixed;
+    margin: 5rem 2rem;
+    padding: 1rem 2rem;
     background: white;
-    width: 40% !important;
+    box-shadow: 0 2px 7px 2px rgba(0, 0, 0, 0.26);
+    border-radius: 10px;
+    position:fixed;
+    background: white;
+    width: 40%;
     height: auto;
-    top: 40%;
-    left: 30%;
-    transform: translate(-70%,-40%);
-    z-index: 1;
+    justify-self: center !important;
 }
 
 .display-block {
@@ -27,9 +29,31 @@
     display: none;
 }
 
+@media screen and (max-width: 600px) {
+    .modal-main {
+        margin: 5rem 3rem;
+        width: 80% !important;
+    }
+}
 
-@media screen and (max-width: 800px){
+@media screen and (min-width: 600px) and (max-width: 800px){
     .modal-main {
         width: 60% !important;
     }
 }
+
+@media screen and (min-width: 800px) and (max-width: 1000px){
+    .modal-main {
+        width: 40% !important;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .modal-main {
+        width: 40%;
+    }
+    .dialog {
+        width: 30% !important;
+    }
+}
+

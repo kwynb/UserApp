@@ -1,0 +1,55 @@
+.user-backdrop {
+    width:100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    z-index: 1;
+}
+
+.top {
+    background-color: #d7760d;
+    color: #d7760d;
+    border-radius: 0;
+}
+
+.user-profile {
+    font-family: 'Open Sans', sans-serif;
+    color: black;
+    margin: 5rem 2rem;
+    padding: 0 !important;
+    background: white;
+    box-shadow: 4px 4px 7px 2px rgba(0, 0, 0, 0.26);
+    position: absolute;
+    background: white;
+    width: 35%;
+    height: auto;
+    top: 32%;
+    left: 38%;
+    justify-self: center !important;
+    z-index: 1;
+
+}
+
+.user-detail {
+    padding: 0 2rem 1rem 2rem;
+}
+
+.user-info {
+    font-family: 'Open Sans', sans-serif !important;
+    display: block !important;
+    padding: 0 1rem !important;
+}
+
+@media screen and (max-width: 575px){
+    .user-profile {
+        top: 20%;
+        left: 5%;
+        width: 80%;
+        justify-self: center !important;
+        z-index: 1;
+    }
+    .mail-top {
+        background-color: #d7760d;
+        color: #d7760d;
+        border-radius: 0;
+    }
+}

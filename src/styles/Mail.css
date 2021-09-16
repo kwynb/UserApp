@@ -23,3 +23,36 @@
     font-size: 0.8rem !important;
     color: gray;
 }
+
+.space {
+    white-space: pre-line !important;
+}
+
+@media screen and (min-width: 576px) {
+    .mail-top-hide {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 575px){
+    .mail-modal {
+        font-family: 'Open Sans', sans-serif;
+        margin: 0;
+        padding: 0 !important;
+        background: white;
+        box-shadow: 4px 4px 7px 2px rgba(0, 0, 0, 0.26);
+        position: absolute;
+        background: white;
+        width: 90%;
+        height: auto;
+        top: 20%;
+        left: 5%;
+        justify-self: center !important;
+        z-index: 1;
+    }
+    .mail-top {
+        background-color: #d7760d;
+        color: #d7760d;
+        border-radius: 0;
+    }
+}

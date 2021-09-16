@@ -5,7 +5,7 @@ class PasswordChange extends Component {
     render() {
         return (
             <div className="modal-backdrop display-block">
-                <div className="cover modal-main">
+                <div className="modal-main">
                     <h3 className="fw-bolder">Change password</h3><hr/>
                     <div className="row">
                         <label className="form-label col-md-5 mb-0"> New Password:</label>

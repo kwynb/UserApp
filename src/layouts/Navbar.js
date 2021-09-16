@@ -22,8 +22,8 @@ class Navbar extends Component {
                     <h3 className="navbar-brand ms-2 mt-1">QuickLOG</h3>
                     {this.props.user.loggedIn &&
                             <div className="d-inline ms-auto">
-                                <ul className="align-text-bottom btn-set navbar-expand-lg align-baseline mb-0">
-                                    <li className="ms-0 me-0" onClick={this.onLogout}>Logout</li>
+                                <ul className="align-text-bottom btn-set navbar-expand-lg align-baseline mb-0 cursor" onClick={this.onLogout}>
+                                    <li className="ms-0 me-0">Logout</li>
                                 </ul>
                             </div>}
 

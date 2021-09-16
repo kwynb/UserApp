@@ -14,6 +14,7 @@ class Login extends Component {
             password: '',
             showPassword: false,
             isLoggedIn: false,
+            showError: false
         };
     }
 
@@ -41,7 +42,7 @@ class Login extends Component {
                 this.setState({isLoggedIn: false});
             })
             .catch(err => {
-                alert("invalid user");
+                this.setState({showError: true});
                 console.error(err.response);
             });
 
@@ -58,10 +59,24 @@ class Login extends Component {
         })
     }
 
+    handleClose = () => {
+        this.setState({
+            showError: false
+        })
+    }
     render() {
 
         return (
             <div className="cover">
+                {this.state.showError && <div className="modal-backdrop">
+                    <div className="modal-main dialog">
+                        <h3 className="fw-bolder">Invalid User</h3><hr/>
+                        <div>Try again.</div>
+                        <div className="float-end">
+                            <button type="button" className="btn" onClick={this.handleClose}>Ok</button>
+                        </div><br/><br/>
+                    </div>
+                </div>}
                 <h3 className="statement">QuickLOG</h3>
                 {this.state.isLoggedIn ? "" :
                 <div className="myForm w-100">

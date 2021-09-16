@@ -54,17 +54,6 @@
     border-radius: 0px;
 }
 
-@media screen and (min-width: 990px){
-    .set {
-        margin: 1rem 10rem !important;
-    }
-}
-
-@media screen and (min-width: 1200px){
-    .set {
-        margin: 1rem 15rem !important;
-    }
-}
 .modal {
     position: fixed;
     top: 0;
@@ -94,10 +83,21 @@
     display: none;
 }
 
+@media screen and (min-width: 990px){
+    .set {
+        margin: 1rem 10rem !important;
+    }
+}
+
+@media screen and (min-width: 1200px){
+    .set {
+        margin: 1rem 15rem !important;
+    }
+}
 
 @media screen and (max-width: 800px){
-    .modal-main {
-        width: 60% !important;
-    }
+    /*.modal-main {*/
+    /*    width: 60% !important;*/
+    /*}*/
 }
 

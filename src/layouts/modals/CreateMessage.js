@@ -9,7 +9,7 @@ class CreateMessage extends Component {
     render() {
         return (
             <div className="modal-backdrop">
-                <div className="modal-main cover">
+                <div className="modal-main">
                     <h3 className="fw-bolder">New Message</h3><hr/>
                     <form className="mb-2">
                         <input

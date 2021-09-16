@@ -75,3 +75,12 @@ export function updateMail(id,sender,recipient,subject, text, deliveryStatus) {
     });
 
 }
+
+export function updateDeliveryStatus(id, deliveryStatus) {
+    const baseURL = 'http://localhost:8000/emails/deliver';
+    return axios.put(baseURL, { headers: {
+            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
+        params: { id, deliveryStatus }
+    });
+
+}

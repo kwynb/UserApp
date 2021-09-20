@@ -130,7 +130,7 @@
 }
 
 .sidenav-menu {
-    padding: .2rem 0.1rem;
+    padding: 0 0.1rem;
 }
 
 .sidenav-menu:hover, .sidenav-menu:active {
@@ -172,11 +172,23 @@
 .text-space {
     white-space: nowrap;
 }
-.show>.dropdown-menu {
-    display: block;
-    position: absolute;
+
+.unread {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700 !important;
 }
 
+.active-tab {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+.active-tab:active, .active-tab:link {
+    border-bottom: solid 2px #013244 !important;
+}
+
+.active {
+    border-bottom: solid 2px #013244 !important;
+}
 @media screen and (max-width: 575px){
     .hide {
         display: none;

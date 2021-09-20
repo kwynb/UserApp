@@ -12,7 +12,7 @@ import {
     getEmail,
     getReceivedEmails,
     getSentEmails, updateDeliveryStatus,
-    updateMail
+    updateMail, updateUnreadStatus
 } from "../services/mail-service";
 import {onGetEmail, onGetSentEmails, onGetReceivedEmails, onGetDrafts} from "../redux/actions/email-action";
 import {RiUser3Fill} from "react-icons/ri";
@@ -29,28 +29,29 @@ class Email extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showCreate: false,
             sender: '',
             recipient: '',
             subject: '',
             message: '',
             deliveryStatus: '',
+            chosenMenu: "Inbox",
             mailDate: '',
             mailTime: '',
             mailDay: '',
             searchTerm: '',
             response: '',
+            sort: "latest",
+            showCreate: false,
             messageDeleted: false,
             messageSent: false,
             showMenu: false,
             showMailUserProfile: false,
-            viewMail: false,
-            chosenMenu: "Inbox"
+            showMail: false,
+            showFilter: false
         }
     }
 
     componentDidMount() {
-        this.setState({isMounted: true});
         getUserByUsername(this.props.login.username).then((res) => {
             this.props.onGetUserByUsername(res.data);
         }).catch((err) => console.error(err.response));
@@ -80,6 +81,7 @@ class Email extends Component {
             }
         }
     }
+
     handleSearch = (event) => {
         this.setState({
             searchTerm: event.target.value
@@ -127,7 +129,7 @@ class Email extends Component {
                     recipient: '',
                     subject: '',
                     message: '',
-                    viewMail: false,
+                    showMail: false,
                     showCreate: false
                 })})
                 .catch((err) => {
@@ -235,7 +237,8 @@ class Email extends Component {
     showInbox = () => {
         this.setState({
             searchTerm: '',
-            viewMail: false,
+            sort: "latest",
+            showMail: false,
             chosenMenu: "Inbox",
             showMenu: false})
     }
@@ -243,7 +246,8 @@ class Email extends Component {
     showDrafts = () => {
         this.setState({
             searchTerm: '',
-            viewMail: false,
+            showMail: false,
+            sort: "latest",
             chosenMenu: "Drafts",
             showMenu: false
         })
@@ -252,7 +256,8 @@ class Email extends Component {
     showSent = () => {
         this.setState({
             searchTerm: '',
-            viewMail: false,
+            showMail: false,
+            sort: "latest",
             chosenMenu: "Sent",
             showMenu: false})
     }
@@ -304,13 +309,13 @@ class Email extends Component {
         deleteEmail(this.props.mail.id)
             .then((res)=>{
                 this.setState({
-                    viewMail: false,
+                    showMail: false,
                     response: res.data.message,
                     messageDeleted: true,
             })
         }).catch((err) => {
                 this.setState({
-                    viewMail: true,
+                    showMail: true,
                     response: err.response.data.message,
                     messageError: true,
                 })
@@ -320,7 +325,7 @@ class Email extends Component {
 
     exitMail = () => {
         this.setState({
-            viewMail: false
+            showMail: false
         });
     }
     render() {
@@ -358,7 +363,6 @@ class Email extends Component {
                                 {this.state.messageDeleted && <h3 className="fw-bolder">Message Not Deleted</h3>}
                                 {this.state.messageSent === false && this.state.deliveryStatus !== "draft" && <h3 className="fw-bolder">Message Not Sent</h3>}
                                 {this.state.deliveryStatus === "draft"  && <h3 className="fw-bolder">Message Not Saved.</h3>}
-
                                 <hr/>
                                 {this.state.messageDeleted &&<div>{this.state.response}</div>}
                                 <div className="float-end">
@@ -372,7 +376,7 @@ class Email extends Component {
                                         message: this.state.message}}
                                         handleRecipient={this.handleRecipient} handleSubject={this.handleSubject} handleMessage={this.handleMessage}
                                         handleDraft={this.handleDraft} handleSend={this.handleSend} handleClose={this.handleClose}/>}
-                        {this.state.showMailUserProfile && <MailUserProfile viewMail={this.state.viewMail}/>}
+                        {this.state.showMailUserProfile && <MailUserProfile showMail={this.state.showMail}/>}
                         <div className="card-body">
                             <h3 className="float-end user mt-2" onClick={this.handleProfile}>
                                 <RiUser3Fill size="1.5rem" className="me-2" color="#013244"/><span className="user-name">{this.props.profile.firstName + " " + this.props.profile.lastName}</span></h3>
@@ -392,9 +396,11 @@ class Email extends Component {
                                         <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showDrafts}>Drafts</h6>
                                         <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showSent}>Sent</h6>
                                         </div>}
-                                        <button className="float-end menu d-inline">
-                                            <BiFilterAlt/>
-                                        </button>
+                                        <button className="float-end menu d-inline" onClick={() => {this.setState({ showFilter: !this.state.showFilter })}}><BiFilterAlt /></button>
+                                        {this.state.showFilter && <div className="mt-2 float-end sidenav me-2">
+                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={() => {this.setState({ sort: "latest", showFilter: false })}}>Latest</h6>
+                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={() => {this.setState({ sort: "oldest", showFilter: false })}}>Oldest</h6>
+                                        </div>}
                                     </div>
                                     <div className="scrollbar scrollbar-black mt-2">
                                         {this.props.mails.filter((mail) => {
@@ -413,10 +419,15 @@ class Email extends Component {
                                             if (mail.text.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
                                                 return mail
                                             }
+                                        }).sort((mailA,mailB) => {
+                                            if (this.state.sort === "oldest") {
+                                                return new Date(mailA.lastModified).getTime() - new Date(mailB.lastModified).getTime()
+                                            }
+                                            return new Date(mailB.lastModified).getTime() - new Date(mailA.lastModified).getTime()
                                         }).map((mail) =>
-                                            <div key= {mail.id} onClick={() => {
+                                            <div key={mail.id} onClick={() => {
                                                 this.setState({
-                                                    viewMail: true
+                                                    showMail: true
                                                 })
                                                 getEmail(mail.id)
                                                     .then((res)=> {
@@ -427,6 +438,10 @@ class Email extends Component {
                                                     getUserByEmail(mail.sender).then((res) => {
                                                         this.props.onGetUserByEmail(res.data);
                                                     }).catch((err)=> console.error(err.response));
+                                                    updateUnreadStatus(mail.id, false)
+                                                        .then((res) => {
+                                                            getEmail(res.data.id).then(res => this.props.onGetEmail(res.data))})
+                                                        .catch((err)=> console.error(err.response));
                                                 }
                                                 if (this.state.chosenMenu !== "Inbox") {
                                                     getUserByEmail(mail.recipient).then((res) => {
@@ -460,13 +475,13 @@ class Email extends Component {
                                                 })
                                                 }}><MailList key={mail.id} data={mail} chosenMenu={this.state.chosenMenu}/>
                                             </div>)}
-                                            { this.props.mails.length === 0 && <div className="d-flex justify-content-center">No messages to read.</div>}
+                                            {this.props.mails.length === 0 && <div className="d-flex justify-content-center">No messages to read.</div>}
                                     </div>
                                 </div>
                                 <div className="col-sm-8 d-inline-block">
                                     <div className="head mb-2 hide">Mail</div>
                                     <div>
-                                        { (this.props.mails.length !== 0 && this.state.viewMail) ?
+                                        { (this.props.mails.length !== 0 && this.state.showMail) ?
                                             <div>{
                                                     <div>{this.props.mails.length !== 0 &&
                                                         <div className="mt-1">
@@ -474,7 +489,7 @@ class Email extends Component {
                                                                 time: this.state.mailTime,
                                                                 date: this.state.mailDate,
                                                                 day: this.state.mailDay,
-                                                                viewMail: this.state.viewMail,
+                                                                showMail: this.state.showMail,
                                                                 chosenMenu: this.state.chosenMenu,
                                                                 showMailUser: this.state.showMailUserProfile
                                                                 }} methods={{

@@ -15,7 +15,7 @@ class Mail extends Component {
     render() {
         return (
             <div className={"mt-1 general" + this.props.mailSet.viewMail ? "mail-modal": "hide"}>
-                <div className={this.props.mailSet.viewMail ? "mail-top mail-top-hide": "hide"}>Hi</div>
+                <div className={this.props.mailSet.showMail ? "mail-top mail-top-hide": "hide"}>Hi</div>
                 <button className="menu float-start" onClick={this.props.methods.handleClose}><GrFormClose size="1.6rem"/></button>
                 {this.props.mailSet.chosenMenu !== "Drafts" && <button className="menu float-end" onClick={this.props.methods.handleForward}><RiShareForwardLine size="1.3rem"/></button>}
                 <button className="menu float-end" onClick={this.props.methods.handleDelete}><RiDeleteBin5Line size="1.2rem"/></button>

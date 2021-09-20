@@ -84,3 +84,10 @@ export function updateDeliveryStatus(id, deliveryStatus) {
     });
 
 }
+
+export function updateUnreadStatus(id, isUnread) {
+    const baseURL = 'http://localhost:8000/emails/set?id='+id+'&isUnread='+isUnread;
+    return axios.put(baseURL, { headers: {
+            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"}});
+
+}

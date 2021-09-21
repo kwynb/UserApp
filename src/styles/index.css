@@ -27,6 +27,14 @@
     border-radius: 10px;
 }
 
+.form-control:hover, .form-control:active {
+    border-bottom: solid 2px #013244 !important;
+}
+
+form-control:focus {
+    border-bottom: solid 2px #d7760d !important;
+}
+
 @media screen and (min-width: 600px){
     .cover {
         margin: 5rem 10rem !important;

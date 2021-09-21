@@ -4,6 +4,7 @@ import {onGetEmails} from "../redux/actions/email-action";
 import {connect} from "react-redux";
 import {onGetUserByEmail} from "../redux/actions/mailuser-action";
 import "../styles/Email.css";
+import {BsPersonSquare} from "react-icons/bs";
 
 class MailList extends Component {
 
@@ -22,8 +23,9 @@ class MailList extends Component {
                 <table className="cursor table table-hover active-tab">
                     <tbody>
                     <tr>
-                        <td>
-                            <input type="checkbox" className="cursor"/>
+                        <td className="ms-2 mt-0">
+                            <BsPersonSquare size="1.2rem" color="rgba(1, 50, 68, 0.76)"/>
+                            {/*<input type="checkbox" className="cursor" key={this.props.key}/>*/}
                         </td>
                         <td className="w-100">
                             <h3 className="float-end label text-dark small">{creationTime}</h3>

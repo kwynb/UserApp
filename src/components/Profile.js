@@ -21,14 +21,17 @@ class Profile extends Component {
             deactivate: false,
             newPassword: '',
             confirmPass: '',
-            oldPassword: ''
+            oldPassword: '',
+            loginUser: localStorage.getItem("user")
         }
+
     }
     componentDidMount() {
         getUserByUsername(this.props.user.username).then((res) => {
             this.props.onGetUserByUsername(res.data);
         }).catch((err) => console.error(err.response));
     }
+
     componentDidUpdate(prevProps, prevState,SS) {
         if (prevProps.profile !== this.props.profile) {
             getUserByUsername(this.props.user.username).then((res) => {

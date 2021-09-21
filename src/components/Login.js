@@ -35,6 +35,8 @@ class Login extends Component {
         login(this.state.username, this.state.password)
             .then((res) => {
                 if (res.data != null) {
+                    console.log(res.data);
+                    localStorage.setItem("user", res.data.id);
                     this.setState({isLoggedIn: true});
                     this.props.onLogin(res.data);
                     this.props.history.push("/profile");

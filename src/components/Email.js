@@ -24,23 +24,49 @@ import MailList from "./MailList";
 import CreateMessage from "../layouts/modals/CreateMessage";
 import Mail from "./Mail";
 import MailUserProfile from "../layouts/modals/MailUserProfile";
+import {DRAFTS, INBOX, LATEST, SENT} from "../utils/constants";
 
 class Email extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            // mail: {
+            //     sender: '',
+            //     recipient: '',
+            //     subject: '',
+            //     message: '',
+            //     deliveryStatus: ''
+            // },
+            // datetime: {
+            //     mailDate: '',
+            //     mailTime: '',
+            //     mailDay: ''
+            // },
+            // show: {
+            //     showCreate: false,
+            //     showMenu: false,
+            //     showMailUserProfile: false,
+            //     showMail: false,
+            //     showFilter: false
+            // },
+            // responses: {
+            //     response: '',
+            //     messageSent: false,
+            //     messageDeleted: false,
+            //     messageError: false
+            // },
+            chosenMenu: INBOX,
+            sort: LATEST,
+            searchTerm: '',
             sender: '',
             recipient: '',
             subject: '',
             message: '',
             deliveryStatus: '',
-            chosenMenu: "Inbox",
             mailDate: '',
             mailTime: '',
             mailDay: '',
-            searchTerm: '',
             response: '',
-            sort: "latest",
             showCreate: false,
             messageDeleted: false,
             messageSent: false,
@@ -55,7 +81,7 @@ class Email extends Component {
         getUserByUsername(this.props.login.username).then((res) => {
             this.props.onGetUserByUsername(res.data);
         }).catch((err) => console.error(err.response));
-        if (this.state.chosenMenu === "Inbox") {
+        if (this.state.chosenMenu === INBOX) {
             getReceivedEmails(this.props.profile.email).then((res) => {
                 this.props.onGetReceivedEmails(res.data);
             }).catch((err) => { console.error(err.response);});
@@ -64,17 +90,17 @@ class Email extends Component {
 
     componentDidUpdate(prevProps, prevState,SS) {
         if (prevProps.mails !== this.props.mails) {
-            if (this.state.chosenMenu === "Inbox") {
+            if (this.state.chosenMenu === INBOX) {
                 getReceivedEmails(this.props.profile.email).then((res) => {
                 this.props.onGetReceivedEmails(res.data);
                 }).catch((err) => { console.error(err.response);});
             }
-            if (this.state.chosenMenu === "Drafts") {
+            if (this.state.chosenMenu === DRAFTS) {
                 getDrafts(this.props.profile.email).then((res) => {
                     this.props.onGetDrafts(res.data);
                 }).catch((err) => { console.error(err.response);});
             }
-            if (this.state.chosenMenu === "Sent") {
+            if (this.state.chosenMenu === SENT) {
                 getSentEmails(this.props.profile.email).then((res) => {
                     this.props.onGetSentEmails(res.data);
                 }).catch((err) => { console.error(err.response);});
@@ -317,7 +343,7 @@ class Email extends Component {
                 this.setState({
                     showMail: true,
                     response: err.response.data.message,
-                    messageError: true,
+                    messageError: true
                 })
         });
 
@@ -434,7 +460,7 @@ class Email extends Component {
                                                         this.props.onGetEmail(res.data);
                                                     })
                                                     .catch();
-                                                if (this.state.chosenMenu === "Inbox") {
+                                                if (this.state.chosenMenu === INBOX) {
                                                     getUserByEmail(mail.sender).then((res) => {
                                                         this.props.onGetUserByEmail(res.data);
                                                     }).catch((err)=> console.error(err.response));
@@ -443,7 +469,7 @@ class Email extends Component {
                                                             getEmail(res.data.id).then(res => this.props.onGetEmail(res.data))})
                                                         .catch((err)=> console.error(err.response));
                                                 }
-                                                if (this.state.chosenMenu !== "Inbox") {
+                                                if (this.state.chosenMenu !== INBOX) {
                                                     getUserByEmail(mail.recipient).then((res) => {
                                                         this.props.onGetUserByEmail(res.data);
                                                     }).catch((err) => console.error(err.response));
@@ -473,7 +499,8 @@ class Email extends Component {
                                                     mailDate: dateFormat,
                                                     mailTime: mailTime
                                                 })
-                                                }}><MailList key={mail.id} data={mail} chosenMenu={this.state.chosenMenu}/>
+                                                }}><MailList key={mail.id} data={mail} showMail={this.state.showMail}
+                                                             chosenMenu={this.state.chosenMenu}/>
                                             </div>)}
                                             {this.props.mails.length === 0 && <div className="d-flex justify-content-center">No messages to read.</div>}
                                     </div>

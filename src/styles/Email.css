@@ -182,13 +182,10 @@
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
 }
-.active-tab:active, .active-tab:link {
+.active-tab:hover ,.active-tab:active {
     border-bottom: solid 2px #013244 !important;
 }
 
-.active {
-    border-bottom: solid 2px #013244 !important;
-}
 @media screen and (max-width: 575px){
     .hide {
         display: none;

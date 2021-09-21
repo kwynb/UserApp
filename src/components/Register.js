@@ -18,7 +18,11 @@ class Register extends Component {
             password: '',
             maxDate: '',
             onUpdate: false,
-            showPassword: false
+            showPassword: false,
+            success: false,
+            error: false,
+            registered: false,
+            edited: false
         };
     }
 
@@ -104,12 +108,12 @@ class Register extends Component {
                 this.state.username,
                 this.state.password)
                 .then(res => {
-
-                    console.log(res.data);
-                    this.props.onGetUser(res.data);
-                })
-                .then(this.props.history.push("/profile"))
-                .catch(err => console.error(err));
+                    this.setState({
+                        success: true,
+                        edited: true
+                    })
+                    this.props.onGetUser(res.data);})
+                .catch(()=> this.setState({error: true}));
         }
     }
 
@@ -121,9 +125,11 @@ class Register extends Component {
             this.state.email,
             this.state.username,
             this.state.password)
-            .then(res => console.log(res.data))
-            .then(this.props.history.push("/login"))
-            .catch(err => console.error(err));
+            .then(() => this.setState({
+                success: true,
+                registered: true
+            }))
+            .catch(()=> this.setState({error: true}));
 
     }
 
@@ -135,11 +141,41 @@ class Register extends Component {
         this.props.history.push("/login");
     }
 
-
+    handleClose = () => {
+        this.setState({
+            success: false,
+            registered: false,
+            edited: false
+        })
+        if (this.state.onUpdate === true) {
+            this.props.history.push("/profile")
+        }
+        if (this.state.onUpdate === false) {
+            this.props.history.push("/")
+        }
+    }
     render() {
         return (
             <div className="rcover">
                 <h3 className="statement">QuickLOG</h3>
+                {this.state.success && <div className="modal-backdrop">
+                    <div className="modal-main dialog">
+                        {this.state.registered && <div><h3 className="fw-bolder">User Added Successfully!</h3><hr/></div>}
+                        {this.state.edited && <div><h3 className="fw-bolder">Edit Successful!</h3><hr/></div>}
+                        <div className="float-end">
+                            <button type="button" className="btn" onClick={this.handleClose}>Ok</button>
+                        </div><br/><br/>
+                    </div>
+                </div>}
+                {this.state.error && <div className="modal-backdrop">
+                    <div className="modal-main dialog">
+                        <h3 className="fw-bolder">ERROR: Invalid User.</h3><hr/>
+                        <div>Try again.</div>
+                        <div className="float-end">
+                            <button type="button" className="btn" onClick={this.handleClose}>Ok</button>
+                        </div><br/><br/>
+                    </div>
+                </div>}
                 <button type="button" className="btn w-25 d-inline float-end" onClick={this.state.onUpdate? this.onCancelEdit : this.onCancelRegister}>Cancel</button>
                 {this.state.onUpdate ? <form onSubmit={this.onEdit} className="myForm mb-3">
                     <div className="row">
@@ -289,7 +325,6 @@ class Register extends Component {
                     <div className="form-group mb-3 col-md-6">
                         <label htmlFor="password">Password: </label>
                         <input
-                            type="password"
                             id="password"
                             type={this.state.showPassword ? "text": "password"}
                             className="form-control d-inline fw-bolder"

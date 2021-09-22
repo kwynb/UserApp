@@ -22,7 +22,9 @@ class Register extends Component {
             success: false,
             error: false,
             registered: false,
-            edited: false
+            edited: false,
+            loginUser: localStorage.getItem("id"),
+            user: localStorage.getItem("user")
         };
     }
 
@@ -34,8 +36,8 @@ class Register extends Component {
         this.setState({
             maxDate: max
         })
-        if (this.props.login.loggedIn) {
-            getUserByUsername(this.props.login.username).then((res) => {
+        if (this.state.user) {
+            getUserByUsername(this.state.user).then((res) => {
                 this.props.onGetUserByUsername(res.data);
                 const date = this.props.profile.birthDay.split("/").reverse();
                 const birthday = date[0] + "-" + date[2] + "-" + date[1];
@@ -64,15 +66,12 @@ class Register extends Component {
     }
 
     handleBirthDayInput = (event) =>{
-        console.log(event);
         this.setState({
             birthday: event.target.value
         });
-        console.log(this.state.birthday);
     }
 
     handleEmailInput = (event) => {
-        console.log(event.target.value);
         this.setState({
             email: event.target.value
         })
@@ -119,6 +118,7 @@ class Register extends Component {
 
     onRegister = (event) => {
         event.preventDefault()
+        this.setState({ onUpdate: false })
         register(this.state.firstname,
             this.state.lastname,
             this.state.birthday,

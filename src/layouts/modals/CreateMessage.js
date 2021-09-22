@@ -18,7 +18,7 @@ class CreateMessage extends Component {
                             placeholder="Recipient"
                             className="form-control d-inline fw-normal mb-2 mail-body"
                             value={ this.props.mailSet.recipient || ""}
-                            onChange={this.props.handleRecipient}
+                            onChange={this.props.handlers.handleRecipient}
                             required
                         /><br/>
                         <input
@@ -27,7 +27,7 @@ class CreateMessage extends Component {
                             placeholder="Subject"
                             className="form-control d-inline fw-normal mb-2 mail-body"
                             value={this.props.mailSet.subject || ""}
-                            onChange={this.props.handleSubject}
+                            onChange={this.props.handlers.handleSubject}
                             required
                         /><br/>
                         <textarea
@@ -37,14 +37,14 @@ class CreateMessage extends Component {
                             rows="6"
                             cols="50"
                             value={this.props.mailSet.message || ""}
-                            onChange={this.props.handleMessage}
+                            onChange={this.props.handlers.handleMessage}
                             required
                         /><br/>
                     </form>
                     <div className="float-end">
-                        <button type="submit" className="btn me-2" onClick={this.props.handleDraft}>Save as Draft</button>
-                        <button type="submit" className="btn me-2" onClick={this.props.handleSend}>Send</button>
-                        <button type="button" className="btn" onClick={this.props.handleClose}>Cancel</button>
+                        <button type="submit" className="btn me-2" onClick={this.props.handlers.handleDraft}>Save as Draft</button>
+                        <button type="submit" className="btn me-2" onClick={this.props.handlers.handleSend}>Send</button>
+                        <button type="button" className="btn" onClick={this.props.handlers.handleClose}>Cancel</button>
                     </div>
                 </div>
             </div>

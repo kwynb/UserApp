@@ -14,24 +14,24 @@ class Mail extends Component {
 
     render() {
         return (
-            <div className={"mt-1 general" + this.props.mailSet.viewMail ? "mail-modal": "hide"}>
-                <div className={this.props.mailSet.showMail ? "mail-top mail-top-hide": "hide"}>Hi</div>
-                <button className="menu float-start" onClick={this.props.methods.handleClose}><GrFormClose size="1.6rem"/></button>
-                {this.props.mailSet.chosenMenu !== "Drafts" && <button className="menu float-end" onClick={this.props.methods.handleForward}><RiShareForwardLine size="1.3rem"/></button>}
-                <button className="menu float-end" onClick={this.props.methods.handleDelete}><RiDeleteBin5Line size="1.2rem"/></button>
-                {this.props.mailSet.chosenMenu === "Inbox" && <button className="menu float-end" onClick={this.props.methods.handleReply}><ImReply size="1.1rem"/></button>}
-                {this.props.mailSet.chosenMenu === "Drafts" && <button className="menu float-end" onClick={this.props.methods.handleEdit}><FiEdit2 size="1.1rem"/></button>}
-                {this.props.mailSet.showMailUser === true && <MailUserProfile handleClose={this.props.methods.handleClose}/>}
+            <div className={"mt-1 general" + this.props.states.showMail ? "mail-modal": "hide"}>
+                <div className={this.props.states.showMail  ? "mail-top mail-top-hide": "hide"}>Hi</div>
+                <button className="menu float-start" onClick={this.props.functions.handleClose}><GrFormClose size="1.6rem"/></button>
+                {this.props.states.chosenMenu !== "Drafts" && <button className="menu float-end" onClick={this.props.functions.handleForward}><RiShareForwardLine size="1.3rem"/></button>}
+                <button className="menu float-end" onClick={this.props.functions.handleDelete}><RiDeleteBin5Line size="1.2rem"/></button>
+                {this.props.states.chosenMenu === "Inbox" && <button className="menu float-end" onClick={this.props.functions.handleReply}><ImReply size="1.1rem"/></button>}
+                {this.props.states.chosenMenu === "Drafts" && <button className="menu float-end" onClick={this.props.functions.handleEdit}><FiEdit2 size="1.1rem"/></button>}
+                {this.props.states.showMailUser === true && <MailUserProfile handleClose={this.props.functions.handleClose}/>}
                 <div className="container">
                         <table className=" d-flex justify-content-start mt-2">
                             <tbody className="mt-5">
                             <tr>
-                                <td className="cursor" onMouseOver={this.props.methods.showUser}
-                                    onMouseOut={this.props.methods.hideUser}>
+                                <td className="cursor" onMouseOver={this.props.functions.showUser}
+                                    onMouseOut={this.props.functions.hideUser}>
                                     <button className="menu cursor"><RiMapPinUserLine size="3rem"/></button>
                                 </td>
                                 <td className="d-inline w-50">
-                                    {this.props.mailSet.chosenMenu === "Inbox" ?
+                                    {this.props.states.chosenMenu === "Inbox" ?
                                     <div>
                                         <h3 className="sender mt-2">{this.props.mailUser.firstName + " " + this.props.mailUser.lastName}</h3>
                                         <h3 className="sender-mail text-secondary">{"<" + this.props.mail.sender + ">"}</h3>
@@ -49,8 +49,8 @@ class Mail extends Component {
                             <h3 className="mail-body text-dark fw-bold">{this.props.mail.subject}</h3>
                             <br/>
                             <p className="mail-body fw-normal text-dark space">{this.props.mail.text}</p>
-                            <h6 className="mb-0 datetime small float-end">{this.props.mailSet.time +" - "+ this.props.mailSet.day}</h6><br/>
-                            <h6 className="mb-0 datetime small float-end">{this.props.mailSet.date}</h6><br/>
+                            <h6 className="mb-0 datetime small float-end">{this.props.states.time +" - "+ this.props.states.day}</h6><br/>
+                            <h6 className="mb-0 datetime small float-end">{this.props.states.date}</h6><br/>
                         </div>
                 </div>
             </div>

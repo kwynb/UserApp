@@ -11,6 +11,7 @@ import Deactivation from "../layouts/modals/Deactivation";
 import PasswordChange from "../layouts/modals/PasswordChange";
 import "../styles/Profile.css";
 import "../styles/Modal.css";
+import {onGetLocalStorage} from "../redux/actions/localstorage-action";
 
 class Profile extends Component {
     constructor(props) {
@@ -22,24 +23,33 @@ class Profile extends Component {
             newPassword: '',
             confirmPass: '',
             oldPassword: '',
-            loginUser: localStorage.getItem("user")
+            loginUser: localStorage.getItem("id"),
+            user: localStorage.getItem("user")
         }
-
     }
+
     componentDidMount() {
-        getUserByUsername(this.props.user.username).then((res) => {
+        getUserByUsername(this.state.user).then((res) => {
+            localStorage.setItem("email", res.data.email);
+            this.props.onGetLocalStorage(this.state.loginUser);
             this.props.onGetUserByUsername(res.data);
         }).catch((err) => console.error(err.response));
     }
 
     componentDidUpdate(prevProps, prevState,SS) {
-        if (prevProps.profile !== this.props.profile) {
-            getUserByUsername(this.props.user.username).then((res) => {
-                this.props.onGetUserByUsername(res.data);
-            }).catch((err) => console.error(err.response));
+        if (this.state.loginUser !== null) {
+            if (prevProps.profile !== this.props.profile) {
+                getUserByUsername(this.props.user.username).then((res) => {
+                    this.props.onGetUserByUsername(res.data);
+                }).catch((err) => console.error(err.response));
+        }}
+        if (localStorage.getItem("id") === null) {
+                this.props.history.push("/");
         }
     }
+
     handleProfile = () => {
+        console.log(this.props.stored);
         this.props.history.push("/profile");
     }
 
@@ -63,8 +73,7 @@ class Profile extends Component {
 
     handleDelete = () => {
         deleteUser(this.props.profile.id)
-            .then((res) => {
-                    console.log(res);
+            .then(() => {
                     this.setState({deactivate: false});
                     this.props.history.push("/login");
                 }
@@ -109,12 +118,8 @@ class Profile extends Component {
                 this.props.profile.email,
                 this.props.profile.username,
                 this.state.newPassword)
-                .then((res) => {
-                        console.log(res.data);
-                        this.setState({ changePass: false});
-                    }
-                )
-                .then(this.props.history.push("/login"))
+                .then(() => {
+                    this.setState({ changePass: false}); })
                 .catch(err => console.error(err.response));
         }
     }
@@ -130,7 +135,7 @@ class Profile extends Component {
     render(){
         return(
             <div className="set">
-                {this.props.loggedIn ?
+                {this.state.loginUser ?
                     <div className="m-0 container">
                         {this.state.changePass && <PasswordChange showPassword={this.state.showPassword} handleChange={this.handleChangePass}
                           handleShowPassword={this.handleShowPassword} handleOld={this.handleOldPassword} handleNew={this.handleNewPassword} handleConfirm={this.handleConfirmPassword} handleClose={this.hideModal}/>}
@@ -208,7 +213,8 @@ const mapStateToProps = (state) => {
         user: state.login.user,
         loggedIn: state.login.user.loggedIn,
         users: state.users.users,
-        profile: state.users.user
+        profile: state.users.user,
+        stored: state.local.stored
     };
 };
 
@@ -216,7 +222,8 @@ const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         onGetUsers,
         onGetUser,
-        onGetUserByUsername
+        onGetUserByUsername,
+        onGetLocalStorage
     }, dispatch);
 };
 

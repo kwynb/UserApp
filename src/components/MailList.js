@@ -25,7 +25,6 @@ class MailList extends Component {
                     <tr>
                         <td className="ms-2 mt-0">
                             <BsPersonSquare size="1.2rem" color="rgba(1, 50, 68, 0.76)"/>
-                            {/*<input type="checkbox" className="cursor" key={this.props.key}/>*/}
                         </td>
                         <td className="w-100">
                             <h3 className="float-end label text-dark small">{creationTime}</h3>

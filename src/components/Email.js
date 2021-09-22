@@ -24,87 +24,85 @@ import MailList from "./MailList";
 import CreateMessage from "../layouts/modals/CreateMessage";
 import Mail from "./Mail";
 import MailUserProfile from "../layouts/modals/MailUserProfile";
-import {DRAFTS, INBOX, LATEST, SENT} from "../utils/constants";
+import {DRAFT_STATUS, DRAFTS, INBOX, LATEST, OLDEST, SENT, SENT_STATUS} from "../utils/constants";
+import MailSaved from "../layouts/modals/MailSaved";
+import MailDeleted from "../layouts/modals/MailDeleted";
+import MailSent from "../layouts/modals/MailSent";
+import MailError from "../layouts/modals/MailError";
 
 class Email extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // mail: {
-            //     sender: '',
-            //     recipient: '',
-            //     subject: '',
-            //     message: '',
-            //     deliveryStatus: ''
-            // },
-            // datetime: {
-            //     mailDate: '',
-            //     mailTime: '',
-            //     mailDay: ''
-            // },
-            // show: {
-            //     showCreate: false,
-            //     showMenu: false,
-            //     showMailUserProfile: false,
-            //     showMail: false,
-            //     showFilter: false
-            // },
-            // responses: {
-            //     response: '',
-            //     messageSent: false,
-            //     messageDeleted: false,
-            //     messageError: false
-            // },
-            chosenMenu: INBOX,
-            sort: LATEST,
-            searchTerm: '',
             sender: '',
             recipient: '',
             subject: '',
             message: '',
             deliveryStatus: '',
+
             mailDate: '',
             mailTime: '',
             mailDay: '',
-            response: '',
+
             showCreate: false,
-            messageDeleted: false,
-            messageSent: false,
             showMenu: false,
             showMailUserProfile: false,
             showMail: false,
-            showFilter: false
-        }
+            showFilter: false,
+
+            response: '',
+            messageSent: false,
+            messageDeleted: false,
+            messageError: false,
+
+            chosenMenu: INBOX,
+            sort: LATEST,
+            searchTerm: '',
+            loginUser: localStorage.getItem("id"),
+            user: localStorage.getItem("user"),
+            email: localStorage.getItem("email")
+        };
     }
 
     componentDidMount() {
-        getUserByUsername(this.props.login.username).then((res) => {
+        getUserByUsername(this.state.user).then((res) => {
             this.props.onGetUserByUsername(res.data);
         }).catch((err) => console.error(err.response));
         if (this.state.chosenMenu === INBOX) {
-            getReceivedEmails(this.props.profile.email).then((res) => {
+            getReceivedEmails(this.state.email).then((res) => {
                 this.props.onGetReceivedEmails(res.data);
             }).catch((err) => { console.error(err.response);});
         }
     }
 
     componentDidUpdate(prevProps, prevState,SS) {
-        if (prevProps.mails !== this.props.mails) {
-            if (this.state.chosenMenu === INBOX) {
-                getReceivedEmails(this.props.profile.email).then((res) => {
-                this.props.onGetReceivedEmails(res.data);
-                }).catch((err) => { console.error(err.response);});
+        if (this.state.loginUser !== null) {
+            if (prevProps.mails !== this.props.mails) {
+                if (this.state.chosenMenu === INBOX) {
+                    getReceivedEmails(this.state.email).then((res) => {
+                        this.props.onGetReceivedEmails(res.data);
+                    }).catch((err) => {
+                        console.error(err.response);
+                    });
+                }
+                if (this.state.chosenMenu === DRAFTS) {
+                    getDrafts(this.state.email).then((res) => {
+                        this.props.onGetDrafts(res.data);
+                    }).catch((err) => {
+                        console.error(err.response);
+                    });
+                }
+                if (this.state.chosenMenu === SENT) {
+                    getSentEmails(this.state.email).then((res) => {
+                        this.props.onGetSentEmails(res.data);
+                    }).catch((err) => {
+                        console.error(err.response);
+                    });
+                }
             }
-            if (this.state.chosenMenu === DRAFTS) {
-                getDrafts(this.props.profile.email).then((res) => {
-                    this.props.onGetDrafts(res.data);
-                }).catch((err) => { console.error(err.response);});
-            }
-            if (this.state.chosenMenu === SENT) {
-                getSentEmails(this.props.profile.email).then((res) => {
-                    this.props.onGetSentEmails(res.data);
-                }).catch((err) => { console.error(err.response);});
-            }
+        }
+        if (localStorage.getItem("id") === null) {
+            this.props.history.push("/");
         }
     }
 
@@ -138,9 +136,9 @@ class Email extends Component {
 
     handleDraft = () => {
         this.setState({
-            deliveryStatus: "draft"
+            deliveryStatus: DRAFT_STATUS
         });
-        if (this.props.mail.deliveryStatus !== "sent") {
+        if (this.props.mail.deliveryStatus === DRAFT_STATUS) {
             updateDeliveryStatus(this.props.mail.id, "")
                 .then((res) => getEmail(res.data.id).then(res => this.props.onGetEmail(res.data)))
                 .catch((err)=> console.error(err.response));
@@ -149,7 +147,7 @@ class Email extends Component {
                 this.state.recipient,
                 this.state.subject,
                 this.state.message,
-                "draft").then(() => {
+                DRAFT_STATUS).then(() => {
                 this.setState( {
                     sender: '',
                     recipient: '',
@@ -170,7 +168,7 @@ class Email extends Component {
         createMail(this.props.profile.email,
             this.state.recipient,
             this.state.subject,
-            this.state.message, "draft")
+            this.state.message, DRAFT_STATUS)
             .then(() => {
                 this.setState({
                     sender: '',
@@ -190,25 +188,27 @@ class Email extends Component {
 
     }
 
+
     handleSend = () => {
         this.setState({
-            deliveryStatus: "sent"
+            deliveryStatus: SENT_STATUS
         });
-        if (this.props.mail.deliveryStatus === "draft") {
+        if (this.props.deliveryStatus === DRAFT_STATUS) {
             updateMail(this.props.mail.id,
                 this.props.profile.email,
                 this.state.recipient,
                 this.state.subject,
                 this.state.message,
-                "sent").then(() => {
-                this.setState( {
-                    sender: '',
-                    recipient: '',
-                    subject: '',
-                    message: '',
-                    messageSent: true,
-                    showCreate: false
-                })})
+                SENT_STATUS).then(() => {
+                    this.setState( {
+                        sender: '',
+                        recipient: '',
+                        subject: '',
+                        message: '',
+                        showCreate: false,
+                        messageSent: true
+                    }
+                )})
                 .catch((err) => {
                     this.setState({
                         response: err.response.data.message,
@@ -221,23 +221,24 @@ class Email extends Component {
         createMail(this.props.profile.email,
              this.state.recipient,
              this.state.subject,
-             this.state.message, "sent")
+             this.state.message, SENT_STATUS)
             .then(() => {
                 this.setState( {
                     sender: '',
                     recipient: '',
                     subject: '',
                     message: '',
-                    messageSent: true,
-                    showCreate: false
-                })})
+                    showCreate: false,
+                    messageSent: true
+                }
+            )})
             .catch((err) => {
                 this.setState({
                     response: err.response.data.message,
                     messageError: true,
                     showCreate: false
                 });
-            })
+            });
     }
 
     handleClose = () => {
@@ -250,54 +251,50 @@ class Email extends Component {
             messageDeleted: false,
             messageSent: false,
             messageError: false,
-            showCreate: false})
-
+            showCreate: false
+        });
     }
 
     showCreateEmail = () => {
-        this.setState({
-            showCreate: true
-        })
+        this.setState({ showCreate: true });
     }
 
     showInbox = () => {
         this.setState({
             searchTerm: '',
-            sort: "latest",
+            chosenMenu: INBOX,
+            sort: LATEST,
             showMail: false,
-            chosenMenu: "Inbox",
-            showMenu: false})
+            showMenu: false
+        });
     }
 
     showDrafts = () => {
         this.setState({
             searchTerm: '',
+            chosenMenu: DRAFTS,
+            sort: LATEST,
             showMail: false,
-            sort: "latest",
-            chosenMenu: "Drafts",
             showMenu: false
-        })
+        });
     }
 
     showSent = () => {
         this.setState({
             searchTerm: '',
+            sort: LATEST,
+            chosenMenu: SENT,
             showMail: false,
-            sort: "latest",
-            chosenMenu: "Sent",
-            showMenu: false})
+            showMenu: false
+        });
     }
 
     showMailUser = () => {
-        this.setState({
-            showMailUserProfile: true
-        })
+        this.setState({ showMailUserProfile: true });
     }
 
     hideMailUser = () => {
-        this.setState({
-            showMailUserProfile: false
-        })
+        this.setState({ showMailUserProfile: false });
     }
 
     editMail = () => {
@@ -315,7 +312,7 @@ class Email extends Component {
             showCreate: true,
             subject: this.props.mail.subject,
             message: `\n\n-------\nForwarded from: <` + this.props.mail.sender + `>\n\n` + this.props.mail.text
-        })
+        });
     }
 
     replyMail = () => {
@@ -338,15 +335,37 @@ class Email extends Component {
                     showMail: false,
                     response: res.data.message,
                     messageDeleted: true,
-            })
-        }).catch((err) => {
-                this.setState({
-                    showMail: true,
-                    response: err.response.data.message,
-                    messageError: true
                 })
+            }).catch((err) => {
+            this.setState({
+                showMail: true,
+                response: err.response.data.message,
+                messageError: true
+            })
         });
 
+    }
+
+    toggleMenu = () => {
+        this.setState({ showMenu: !this.state.showMenu});
+    }
+
+    toggleFilter = () => {
+        this.setState({ showFilter: !this.state.showFilter });
+    }
+
+    filterOldest = () => {
+        this.setState({
+            sort: OLDEST,
+            showFilter: false
+        });
+    }
+
+    filterLatest = () => {
+        this.setState({
+            sort: LATEST,
+            showFilter: false
+        });
     }
 
     exitMail = () => {
@@ -354,59 +373,128 @@ class Email extends Component {
             showMail: false
         });
     }
-    render() {
 
+    filterEmails = (mail) => {
+        if (this.state.searchTerm === "") {
+            return mail
+        }
+        if (mail.sender.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
+            return mail
+        }
+        if (mail.recipient.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
+            return mail
+        }
+        if (mail.subject.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
+            return mail
+        }
+        if (mail.text.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
+            return mail
+        }
+    }
+
+    sortEmails = (mailA,mailB) => {
+        if (this.state.sort === OLDEST) {
+            return new Date(mailA.lastModified).getTime() - new Date(mailB.lastModified).getTime()
+        }
+        return new Date(mailB.lastModified).getTime() - new Date(mailA.lastModified).getTime()
+    }
+
+    mapEmails = (mail) => {
+       return (
+           <div key={mail.id} onClick={() => {
+                   this.setState({
+                       showMail: true
+                   })
+                   getEmail(mail.id)
+                       .then((res)=> {
+                           console.log(res.data);
+                           this.props.onGetEmail(res.data);
+                       })
+                       .catch();
+                   if (this.state.chosenMenu === INBOX) {
+                   getUserByEmail(mail.sender).then((res) => {
+                       this.props.onGetUserByEmail(res.data);
+                   }).catch((err)=> console.error(err.response));
+                   updateUnreadStatus(mail.id, false)
+                       .then((res) => {
+                           getEmail(res.data.id).then(res => this.props.onGetEmail(res.data))})
+                       .catch((err)=> console.error(err.response));
+               }
+               if (this.state.chosenMenu !== INBOX) {
+                   getUserByEmail(mail.recipient).then((res) => {
+                       this.props.onGetUserByEmail(res.data);
+                   }).catch((err) => console.error(err.response));
+               }
+               const mailDateTime = mail.lastModified;
+               const mailDate = mailDateTime.substr(0, 11).split("/").reverse();
+               const dateFormat = new Date(parseInt(mailDate[0]), mailDate[2] - 1, parseInt(mailDate[1])).toLocaleString('en-US', {
+                   timeZone: 'Asia/Manila',
+                   year: 'numeric',
+                   month: 'long',
+                   day: 'numeric'
+               });
+               const mailDay = new Date(parseInt(mailDate[0]), mailDate[2] - 1, parseInt(mailDate[1])).toLocaleString('en-US', {
+                   timeZone: 'Asia/Manila',
+                   weekday: 'long'
+               });
+               const time = mailDateTime.substr(11, 15).split(":").reverse();
+               const timeFormat = () => {
+                   if (time[2] > 12) {
+                       return "PM";
+                   }
+                   return "AM"
+               }
+               const mailTime = (time[2] % 12 || 12) + ":" + time[1] + timeFormat();
+               this.setState({
+                   mailDay: mailDay,
+                   mailDate: dateFormat,
+                   mailTime: mailTime
+               })
+           }}>
+               <MailList key={mail.id} data={mail} chosenMenu={this.state.chosenMenu}/>
+           </div>);
+    }
+
+
+    render() {
         return (
             <div className="mail">
-                {this.props.login.loggedIn ?
+                {this.state.loginUser ?
                     <div className="container email pb-3">
-                        {this.state.deliveryStatus === "draft" && <div className="modal-backdrop">
-                            <div className="modal-main dialog">
-                                <h3 className="fw-bolder">Message Saved</h3>
-                                <div className="float-end">
-                                    <button type="button" className="btn" onClick={this.handleClose}>Ok</button>
-                                </div><br/><br/>
-                            </div>
-                        </div>}
-                        {this.state.messageDeleted && <div className="modal-backdrop">
-                            <div className="modal-main dialog">
-                                <h3 className="fw-bolder">{this.state.response}</h3>
-                                <div className="float-end">
-                                    <button type="button" className="btn" onClick={this.handleClose}>Ok</button>
-                                </div><br/><br/>
-                            </div>
-                        </div>}
-                        {this.state.messageSent && <div className="modal-backdrop">
-                            <div className="modal-main dialog">
-                                <h3 className="fw-bolder">Message Sent</h3>
-                                <div className="float-end">
-                                    <button type="button" className="btn" onClick={this.handleClose}>Ok</button>
-                                </div><br/><br/>
-                            </div>
-                        </div>}
-                        {this.state.messageError && <div className="modal-backdrop">
-                            <div className="modal-main dialog">
-                                {this.state.messageDeleted && <h3 className="fw-bolder">Message Not Deleted</h3>}
-                                {this.state.messageSent === false && this.state.deliveryStatus !== "draft" && <h3 className="fw-bolder">Message Not Sent</h3>}
-                                {this.state.deliveryStatus === "draft"  && <h3 className="fw-bolder">Message Not Saved.</h3>}
-                                <hr/>
-                                {this.state.messageDeleted &&<div>{this.state.response}</div>}
-                                <div className="float-end">
-                                    <button type="button" className="btn" onClick={this.handleClose}>Ok</button>
-                                </div><br/><br/>
-                            </div>
-                        </div>}
-                        {this.state.showCreate && <CreateMessage mailSet={{
-                                        recipient: this.state.recipient,
-                                        subject: this.state.subject,
-                                        message: this.state.message}}
-                                        handleRecipient={this.handleRecipient} handleSubject={this.handleSubject} handleMessage={this.handleMessage}
-                                        handleDraft={this.handleDraft} handleSend={this.handleSend} handleClose={this.handleClose}/>}
-                        {this.state.showMailUserProfile && <MailUserProfile showMail={this.state.showMail}/>}
+                        {this.state.deliveryStatus === DRAFT_STATUS && <MailSaved handleClose={this.handleClose}/>}
+                        {this.state.messageDeleted &&
+                            <MailDeleted response={this.state.response} handleClose={this.handleClose}/>}
+                        {this.state.messageSent && <MailSent handleClose={this.handleClose}/>}
+                        {this.state.messageError &&
+                            <MailError responses={{
+                                        messageDeleted: this.state.messageDeleted,
+                                        messageSent: this.state.messageSent
+                                        }}
+                                       deliveryStatus={this.state.deliveryStatus}
+                                       handleClose={this.handleClose}/>}
+                        {this.state.showCreate &&
+                            <CreateMessage mailSet={{
+                                                recipient: this.state.recipient,
+                                                subject: this.state.subject,
+                                                message: this.state.message
+                                            }} handlers={{
+                                               handleRecipient: this.handleRecipient,
+                                               handleSubject: this.handleSubject,
+                                               handleMessage: this.handleMessage,
+                                               handleDraft: this.handleDraft,
+                                               handleSend: this.handleSend,
+                                               handleClose: this.handleClose
+                                            }}/>}
+                        {this.state.showMailUserProfile && <MailUserProfile/>}
                         <div className="card-body">
                             <h3 className="float-end user mt-2" onClick={this.handleProfile}>
-                                <RiUser3Fill size="1.5rem" className="me-2" color="#013244"/><span className="user-name">{this.props.profile.firstName + " " + this.props.profile.lastName}</span></h3>
-                            <button className="float-end btn mb-2 me-3" onClick={this.showCreateEmail}> <IoMdAdd size="1.5rem"/> <span className="align-bottom word">Compose</span></button>
+                                <RiUser3Fill size="1.5rem" className="me-2" color="#013244"/>
+                                <span className="user-name">{this.props.profile.firstName + " " + this.props.profile.lastName}</span>
+                            </h3>
+                            <button className="float-end btn mb-2 me-3" onClick={this.showCreateEmail}>
+                                <IoMdAdd size="1.5rem"/>
+                                <span className="align-bottom word">Compose</span>
+                            </button>
                             <form className="form-outline d-inline search">
                                 <input type="search" id="form1" className="form-control d-inline fw-bolder"
                                        placeholder="Search" value={this.state.searchTerm || ""} onChange={this.handleSearch}/>
@@ -415,94 +503,25 @@ class Email extends Component {
                                 <div className="ms-0 col-sm-4">
                                     <div className="head mb-2">Mails</div>
                                     <div className="d-inline">
-                                        <button className="float-start chosen" onClick={()=>{this.setState({showMenu: !this.state.showMenu})}}>{this.state.chosenMenu}</button>
-                                        <button className="float-start menu d-inline" onClick={() => this.setState({showMenu: !this.state.showMenu})}><IoIosArrowDroprightCircle size="1.5rem"/></button>
-                                        {this.state.showMenu && <div className="mt-2 float-start sidenav">
-                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showInbox}>Inbox</h6>
-                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showDrafts}>Drafts</h6>
-                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showSent}>Sent</h6>
-                                        </div>}
-                                        <button className="float-end menu d-inline" onClick={() => {this.setState({ showFilter: !this.state.showFilter })}}><BiFilterAlt /></button>
-                                        {this.state.showFilter && <div className="mt-2 float-end sidenav me-2">
-                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={() => {this.setState({ sort: "latest", showFilter: false })}}>Latest</h6>
-                                        <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={() => {this.setState({ sort: "oldest", showFilter: false })}}>Oldest</h6>
-                                        </div>}
+                                        <button className="float-start chosen" onClick={this.toggleMenu}>{this.state.chosenMenu}</button>
+                                        <button className="float-start menu d-inline" onClick={this.toggleMenu}><IoIosArrowDroprightCircle size="1.5rem"/></button>
+                                        {this.state.showMenu &&
+                                            <div className="mt-2 float-start sidenav">
+                                                <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showInbox}>Inbox</h6>
+                                                <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showDrafts}>Drafts</h6>
+                                                <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.showSent}>Sent</h6>
+                                            </div>}
+                                        <button className="float-end menu d-inline" onClick={this.toggleFilter}><BiFilterAlt /></button>
+                                        {this.state.showFilter &&
+                                            <div className="mt-2 float-end sidenav me-2">
+                                                <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.filterLatest}>Latest</h6>
+                                                <h6 className="ms-3 form-label fw-bolder sidenav-menu cursor" onClick={this.filterOldest}>Oldest</h6>
+                                            </div>}
                                     </div>
                                     <div className="scrollbar scrollbar-black mt-2">
-                                        {this.props.mails.filter((mail) => {
-                                            if (this.state.searchTerm === "") {
-                                                return mail
-                                            }
-                                            if (mail.sender.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
-                                                return mail
-                                            }
-                                            if (mail.recipient.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
-                                                return mail
-                                            }
-                                            if (mail.subject.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
-                                                return mail
-                                            }
-                                            if (mail.text.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
-                                                return mail
-                                            }
-                                        }).sort((mailA,mailB) => {
-                                            if (this.state.sort === "oldest") {
-                                                return new Date(mailA.lastModified).getTime() - new Date(mailB.lastModified).getTime()
-                                            }
-                                            return new Date(mailB.lastModified).getTime() - new Date(mailA.lastModified).getTime()
-                                        }).map((mail) =>
-                                            <div key={mail.id} onClick={() => {
-                                                this.setState({
-                                                    showMail: true
-                                                })
-                                                getEmail(mail.id)
-                                                    .then((res)=> {
-                                                        this.props.onGetEmail(res.data);
-                                                    })
-                                                    .catch();
-                                                if (this.state.chosenMenu === INBOX) {
-                                                    getUserByEmail(mail.sender).then((res) => {
-                                                        this.props.onGetUserByEmail(res.data);
-                                                    }).catch((err)=> console.error(err.response));
-                                                    updateUnreadStatus(mail.id, false)
-                                                        .then((res) => {
-                                                            getEmail(res.data.id).then(res => this.props.onGetEmail(res.data))})
-                                                        .catch((err)=> console.error(err.response));
-                                                }
-                                                if (this.state.chosenMenu !== INBOX) {
-                                                    getUserByEmail(mail.recipient).then((res) => {
-                                                        this.props.onGetUserByEmail(res.data);
-                                                    }).catch((err) => console.error(err.response));
-                                                }
-                                                const mailDateTime = mail.lastModified;
-                                                const mailDate = mailDateTime.substr(0, 11).split("/").reverse();
-                                                const dateFormat = new Date(parseInt(mailDate[0]), mailDate[2] - 1, parseInt(mailDate[1])).toLocaleString('en-US', {
-                                                    timeZone: 'Asia/Manila',
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric'
-                                                });
-                                                const mailDay = new Date(parseInt(mailDate[0]), mailDate[2] - 1, parseInt(mailDate[1])).toLocaleString('en-US', {
-                                                    timeZone: 'Asia/Manila',
-                                                    weekday: 'long'
-                                                });
-                                                const time = mailDateTime.substr(11, 15).split(":").reverse();
-                                                const timeFormat = () => {
-                                                    if (time[2] > 12) {
-                                                        return "PM";
-                                                    }
-                                                    return "AM"
-                                                }
-                                                const mailTime = (time[2] % 12 || 12) + ":" + time[1] + timeFormat();
-                                                this.setState({
-                                                    mailDay: mailDay,
-                                                    mailDate: dateFormat,
-                                                    mailTime: mailTime
-                                                })
-                                                }}><MailList key={mail.id} data={mail} showMail={this.state.showMail}
-                                                             chosenMenu={this.state.chosenMenu}/>
-                                            </div>)}
-                                            {this.props.mails.length === 0 && <div className="d-flex justify-content-center">No messages to read.</div>}
+                                        {this.props.mails.filter(this.filterEmails).sort(this.sortEmails).map(this.mapEmails)}
+                                        {this.props.mails.length === 0 &&
+                                        <div className="d-flex justify-content-center">No messages to read.</div>}
                                     </div>
                                 </div>
                                 <div className="col-sm-8 d-inline-block">
@@ -512,14 +531,14 @@ class Email extends Component {
                                             <div>{
                                                     <div>{this.props.mails.length !== 0 &&
                                                         <div className="mt-1">
-                                                            <Mail mailSet={{
+                                                            <Mail states={{
                                                                 time: this.state.mailTime,
                                                                 date: this.state.mailDate,
                                                                 day: this.state.mailDay,
                                                                 showMail: this.state.showMail,
-                                                                chosenMenu: this.state.chosenMenu,
-                                                                showMailUser: this.state.showMailUserProfile
-                                                                }} methods={{
+                                                                showMailUser: this.state.showMailUserProfile,
+                                                                chosenMenu: this.state.chosenMenu
+                                                                }} functions={{
                                                                 showUser: this.showMailUser,
                                                                 hideUser: this.hideMailUser,
                                                                 handleClose: this.exitMail,

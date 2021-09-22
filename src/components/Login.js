@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {onLogin} from "../redux/actions/login-action";
 import "../styles/Login.css";
+import {onGetLocalStorage} from "../redux/actions/localstorage-action";
 
 class Login extends Component {
     constructor(props) {
@@ -13,9 +14,16 @@ class Login extends Component {
             username: '',
             password: '',
             showPassword: false,
-            isLoggedIn: false,
-            showError: false
+            showError: false,
+            loginUser: localStorage.getItem("id")
         };
+    }
+
+    componentDidMount() {
+        console.log(this.props.stored);
+        if (this.state.loginUser !== null) {
+            this.props.history.push("/profile");
+        }
     }
 
     handleUsernameInput = (event) => {
@@ -35,19 +43,18 @@ class Login extends Component {
         login(this.state.username, this.state.password)
             .then((res) => {
                 if (res.data != null) {
-                    console.log(res.data);
-                    localStorage.setItem("user", res.data.id);
-                    this.setState({isLoggedIn: true});
+                    localStorage.setItem("id", res.data.id);
+                    localStorage.setItem("user", res.data.username);
+                    localStorage.setItem("password", res.data.password);
                     this.props.onLogin(res.data);
+                    console.log(this.props.stored);
                     this.props.history.push("/profile");
                 }
-                this.setState({isLoggedIn: false});
             })
             .catch(err => {
                 this.setState({showError: true});
                 console.error(err.response);
             });
-
     }
 
     handleNewUser = (event) => {
@@ -80,7 +87,7 @@ class Login extends Component {
                     </div>
                 </div>}
                 <h3 className="statement">QuickLOG</h3>
-                {this.state.isLoggedIn ? "" :
+                {this.state.loginUser ? "" :
                 <div className="myForm w-100">
                     <form onSubmit={this.onLogin}>
                         <div className="form-group mb-2">
@@ -132,13 +139,16 @@ Login.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.login.user
+        user: state.login.user,
+        loggedIn: state.login.user.loggedIn,
+        stored: state.local.stored
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        onLogin: onLogin,
+        onLogin,
+        onGetLocalStorage
     }, dispatch);
 };
 

@@ -19,7 +19,6 @@ class Navbar extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.stored);
         if (localStorage.getItem("id") !== null) {
             this.props.onGetLocalStorage(this.state.loginUser);
         }

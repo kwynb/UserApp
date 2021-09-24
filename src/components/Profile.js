@@ -39,7 +39,7 @@ class Profile extends Component {
     componentDidUpdate(prevProps, prevState,SS) {
         if (this.state.loginUser !== null) {
             if (prevProps.profile !== this.props.profile) {
-                getUserByUsername(this.props.user.username).then((res) => {
+                getUserByUsername(this.state.user).then((res) => {
                     this.props.onGetUserByUsername(res.data);
                 }).catch((err) => console.error(err.response));
         }}
@@ -49,7 +49,6 @@ class Profile extends Component {
     }
 
     handleProfile = () => {
-        console.log(this.props.stored);
         this.props.history.push("/profile");
     }
 

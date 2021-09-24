@@ -20,7 +20,6 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.stored);
         if (this.state.loginUser !== null) {
             this.props.history.push("/profile");
         }
@@ -47,7 +46,6 @@ class Login extends Component {
                     localStorage.setItem("user", res.data.username);
                     localStorage.setItem("password", res.data.password);
                     this.props.onLogin(res.data);
-                    console.log(this.props.stored);
                     this.props.history.push("/profile");
                 }
             })

@@ -17,14 +17,14 @@ class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            changePass: false,
+            changePass  : false,
             showPassword: false,
-            deactivate: false,
-            newPassword: '',
-            confirmPass: '',
-            oldPassword: '',
-            loginUser: localStorage.getItem("id"),
-            user: localStorage.getItem("user")
+            deactivate  : false,
+            newPassword : '',
+            confirmPass : '',
+            oldPassword : '',
+            loginUser   : localStorage.getItem("id"),
+            user        : localStorage.getItem("user")
         }
     }
 
@@ -125,8 +125,8 @@ class Profile extends Component {
 
     hideModal = () => {
         this.setState({
-            changePass: false,
-            deactivate: false
+            changePass  : false,
+            deactivate  : false
         })
     }
 
@@ -209,11 +209,11 @@ class Profile extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.login.user,
+        user    : state.login.user,
         loggedIn: state.login.user.loggedIn,
-        users: state.users.users,
-        profile: state.users.user,
-        stored: state.local.stored
+        users   : state.users.users,
+        profile : state.users.user,
+        stored  : state.local.stored
     };
 };
 

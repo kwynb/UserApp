@@ -10,21 +10,21 @@ class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstname: '',
-            lastname: '',
-            birthday: '',
-            email: '',
-            username: '',
-            password: '',
-            maxDate: '',
-            onUpdate: false,
+            firstname   : '',
+            lastname    : '',
+            birthday    : '',
+            email       : '',
+            username    : '',
+            password    : '',
+            maxDate     : '',
+            onUpdate    : false,
             showPassword: false,
-            success: false,
-            error: false,
-            registered: false,
-            edited: false,
-            loginUser: localStorage.getItem("id"),
-            user: localStorage.getItem("user")
+            success     : false,
+            error       : false,
+            registered  : false,
+            edited      : false,
+            loginUser   : localStorage.getItem("id"),
+            user        : localStorage.getItem("user")
         };
     }
 
@@ -42,13 +42,13 @@ class Register extends Component {
                 const date = this.props.profile.birthDay.split("/").reverse();
                 const birthday = date[0] + "-" + date[2] + "-" + date[1];
                 this.setState({
-                    firstname: this.props.profile.firstName,
-                    lastname: this.props.profile.lastName,
-                    birthday: birthday,
-                    email: this.props.profile.email,
-                    username: this.props.profile.username,
-                    password: this.props.profile.password,
-                    onUpdate: true});
+                    firstname   : this.props.profile.firstName,
+                    lastname    : this.props.profile.lastName,
+                    birthday    : birthday,
+                    email       : this.props.profile.email,
+                    username    : this.props.profile.username,
+                    password    : this.props.profile.password,
+                    onUpdate    : true});
             }).catch((err) => {console.error(err.response);});
         }
     }
@@ -108,8 +108,8 @@ class Register extends Component {
                 this.state.password)
                 .then(res => {
                     this.setState({
-                        success: true,
-                        edited: true
+                        success : true,
+                        edited  : true
                     })
                     this.props.onGetUser(res.data);})
                 .catch(()=> this.setState({error: true}));
@@ -126,8 +126,8 @@ class Register extends Component {
             this.state.username,
             this.state.password)
             .then(() => this.setState({
-                success: true,
-                registered: true
+                success     : true,
+                registered  : true
             }))
             .catch(()=> this.setState({error: true}));
 
@@ -143,9 +143,9 @@ class Register extends Component {
 
     handleClose = () => {
         this.setState({
-            success: false,
-            registered: false,
-            edited: false
+            success     : false,
+            registered  : false,
+            edited      : false
         })
         if (this.state.onUpdate === true) {
             this.props.history.push("/profile")
@@ -347,18 +347,18 @@ class Register extends Component {
     }
 
 Register.propTypes = {
-    firstname: PropTypes.string,
-    lastname: PropTypes.string,
-    birthday: PropTypes.instanceOf(Date),
-    email:PropTypes.string,
-    username: PropTypes.string,
-    password: PropTypes.string,
+    firstname   : PropTypes.string,
+    lastname    : PropTypes.string,
+    birthday    : PropTypes.instanceOf(Date),
+    email       : PropTypes.string,
+    username    : PropTypes.string,
+    password    : PropTypes.string,
 }
 
 const mapStateToProps = (state) => {
     return {
-        login: state.login.user,
-        profile: state.users.user
+        login   : state.login.user,
+        profile : state.users.user
     };
 };
 

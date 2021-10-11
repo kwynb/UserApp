@@ -1,4 +1,4 @@
-import {ON_GET_USER_BY_EMAIL_ACTION} from "../actions/mailuser-action";
+import {ON_GET_USER_BY_EMAIL_ACTION} from "../../utils/on-actions";
 
 const getDefaultState = () => ({mailUser:{}});
 

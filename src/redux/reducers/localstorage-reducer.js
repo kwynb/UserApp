@@ -1,4 +1,4 @@
-import {ON_LOCAL_STORAGE_ACTION} from "../actions/localstorage-action";
+import {ON_LOCAL_STORAGE_ACTION} from "../../utils/on-actions";
 
 const getDefaultState = () => ({ stored: null });
 

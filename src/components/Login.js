@@ -11,11 +11,11 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
-            password: '',
+            username    : '',
+            password    : '',
             showPassword: false,
-            showError: false,
-            loginUser: localStorage.getItem("id")
+            showError   : false,
+            loginUser   : localStorage.getItem("id")
         };
     }
 
@@ -130,16 +130,16 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-    username: PropTypes.string,
-    password: PropTypes.string,
-    isLoggedIn: PropTypes.bool
+    username    : PropTypes.string,
+    password    : PropTypes.string,
+    isLoggedIn  : PropTypes.bool
 }
 
 const mapStateToProps = (state) => {
     return {
-        user: state.login.user,
+        user    : state.login.user,
         loggedIn: state.login.user.loggedIn,
-        stored: state.local.stored
+        stored  : state.local.stored
     };
 };
 

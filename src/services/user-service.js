@@ -1,90 +1,74 @@
 import axios from 'axios';
+import {
+    DELETE_URL,
+    GET_BY_EMAIL_URL,
+    GET_BY_USERNAME_URL,
+    GET_USERS_URL,
+    HEADER_CONFIG,
+    HEADERS,
+    UPDATE_URL
+} from "../utils/link-and-configs";
 
-export function login(username,password) {
-    const baseURL = 'http://localhost:8080/users/login';
-    const body = JSON.stringify({
-        username : username,
-        password : password
+export function login(username, password) {
+    const params = JSON.stringify({
+        username    : username,
+        password    : password
     })
-    return axios.post(baseURL, body, { headers: {
-        'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"}});
+    return axios.post(LOGIN_URL, params, HEADER_CONFIG);
 
 }
 
-export function logout(username,password) {
-    const baseURL = 'http://localhost:8080/users/logout';
-    const body = JSON.stringify({
-        username : username,
-        password : password
+export function logout(username, password) {
+    const params = JSON.stringify({
+        username    : username,
+        password    : password
     })
-    return axios.post(baseURL, body, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"}});
+    return axios.post(LOGOUT_URL, params, HEADER_CONFIG);
 
 }
 
-export function register(firstname,lastname,birthday,email,username,password) {
-    const baseURL = 'http://localhost:8080/users/save';
-    const body = JSON.stringify({
-        firstName : firstname,
-        lastName : lastname,
-        birthDay : birthday,
-        email : email,
-        username : username,
-        password : password
+export function register(firstname, lastname, birthday, email, username, password) {
+    const params = JSON.stringify({
+        firstName   : firstname,
+        lastName    : lastname,
+        birthDay    : birthday,
+        email       : email,
+        username    : username,
+        password    : password
     })
-    return axios.post(baseURL, body, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"}});
+    return axios.post(REGISTER_URL, params, HEADER_CONFIG);
 
 }
 
 export function update(id,firstname,lastname,birthday,email,username,password) {
-    const baseURL = `http://localhost:8080/users/update`;
-    const body = JSON.stringify({
-        firstName : firstname,
-        lastName : lastname,
-        birthDay : birthday,
-        email : email,
-        username : username,
-        password : password
+    const params = JSON.stringify({
+        firstName   : firstname,
+        lastName    : lastname,
+        birthDay    : birthday,
+        email       : email,
+        username    : username,
+        password    : password
     })
-    return axios.put(baseURL, body, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
-            params: { id }
-    });
+    return axios.put(UPDATE_URL, params, { headers: HEADERS, params: { id }});
 
 }
 
 export function deleteUser(id) {
-    const baseURL = `http://localhost:8080/users/delete?`;
-    return axios.delete(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
-            params: { id }
-    });
-}
-
-export function getUser(id) {
-    const baseURL = `http://localhost:8080/users/get/${id}`;
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" }});
+    return axios.delete(DELETE_URL, { headers:  HEADERS, params: { id }});
 }
 
 export function getUserByUsername(username) {
-    const baseURL = `http://localhost:8080/users/get/username?`;
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
-            params: { username }
-    });
+    return axios.get(GET_BY_USERNAME_URL, { headers: HEADERS, params: { username }});
 }
+
 export function getUserByEmail(email) {
-    const baseURL = 'http://localhost:8080/users/get/email?';
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
-        params: { email }
-    });
+    return axios.get(GET_BY_EMAIL_URL, { headers: HEADERS, params: { email }});
+}
+export function getUser(id) {
+    const GET_USER_URL = `http://localhost:8080/users/get/${id}`;
+    return axios.get(GET_USER_URL, HEADER_CONFIG);
 }
 
 export function getUsers() {
-    const baseURL = 'http://localhost:8080/users/get';
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" }});
+    return axios.get(GET_USERS_URL, HEADER_CONFIG);
 }

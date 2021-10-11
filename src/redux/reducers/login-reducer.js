@@ -1,4 +1,4 @@
-import {ON_LOGIN_ACTION, ON_LOGOUT_ACTION} from "../actions/login-action";
+import {ON_LOGIN_ACTION, ON_LOGOUT_ACTION} from "../../utils/on-actions";
 
 const getDefaultState = () => ({ user: {}, loggedIn: false });
 

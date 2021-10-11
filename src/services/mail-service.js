@@ -1,93 +1,69 @@
 import axios from "axios";
+import {
+    CREATE_EMAIL_URL, DELETE_EMAIL_URL,
+    DELIVERYSTATUS_URL, GET_DRAFTS_URL,
+    GET_EMAILS_URL, GET_RECEIVED_URL, GET_SENT_URL,
+    HEADER_CONFIG,
+    HEADERS,
+    UPDATE_EMAIL_URL
+} from "../utils/link-and-configs";
 
-export function getEmailList() {
-    const baseURL = 'http://localhost:8000/emails/get';
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" }});
-}
-
-export function getEmail(id) {
-    const baseURL = `http://localhost:8000/emails/get/${id}`;
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" }});
-}
-
-export function getDrafts(email) {
-    const baseURL = 'http://localhost:8000/emails/draft';
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
-        params: { by: email }
-    });
-}
-
-export function getSentEmails(email) {
-    const baseURL = 'http://localhost:8000/emails/sent';
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
-        params: { by: email }
-    });
-}
-
-export function getReceivedEmails(email) {
-    const baseURL = 'http://localhost:8000/emails/received?';
-    return axios.get(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
-            params: { by: email }
-    });
-}
-
-export function deleteEmail(id) {
-    const baseURL = `http://localhost:8000/emails/delete?`;
-    return axios.delete(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
-        params: { id }
-    });
-}
-
-export function createMail(sender,recipient,subject, text, deliveryStatus) {
-    const baseURL = 'http://localhost:8000/emails/new';
-    const body = JSON.stringify({
-        sender: sender,
-        recipient: recipient,
-        subject: subject,
-        text: text,
-        deliveryStatus: deliveryStatus,
-        unread: true
+export function createMail(sender, recipient, subject, text, deliveryStatus) {
+    const params = JSON.stringify({
+            sender          : sender,
+            recipient       : recipient,
+            subject         : subject,
+            text            : text,
+            deliveryStatus  : deliveryStatus,
+            unread          : true
     })
-    return axios.post(baseURL, body, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"}});
+    return axios.post(CREATE_EMAIL_URL, params, HEADER_CONFIG);
 
 }
 
 export function updateMail(id,sender,recipient,subject, text, deliveryStatus) {
-    const baseURL = 'http://localhost:8000/emails/update';
-    const body = JSON.stringify({
-        sender: sender,
-        recipient: recipient,
-        subject: subject,
-        text: text,
-        deliveryStatus: deliveryStatus,
-        unread: true
+    const params = JSON.stringify({
+        sender          : sender,
+        recipient       : recipient,
+        subject         : subject,
+        text            : text,
+        deliveryStatus  : deliveryStatus,
+        unread          : true
     })
-    return axios.put(baseURL, body, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
-        params: { id }
-    });
+    return axios.put(UPDATE_EMAIL_URL, params, { headers: HEADERS, params: { id }});
 
 }
 
 export function updateDeliveryStatus(id, deliveryStatus) {
-    const baseURL = 'http://localhost:8000/emails/deliver?';
-    return axios.put(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
-        params: { id, as: deliveryStatus }
-    });
-
+    return axios.put(DELIVERYSTATUS_URL, { headers: HEADERS, params: { id, as: deliveryStatus }});
 }
 
 export function updateUnreadStatus(id, isUnread) {
-    const baseURL = 'http://localhost:8000/emails/set?id='+id+'&isUnread='+isUnread;
-    return axios.put(baseURL, { headers: {
-            'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"}});
+    const UNREAD_STATUS_URL = 'http://localhost:8000/emails/set?id='+id+'&isUnread='+isUnread;
+    return axios.put(UNREAD_STATUS_URL, HEADER_CONFIG);
+}
 
+export function deleteEmail(id) {
+    return axios.delete(DELETE_EMAIL_URL, { headers: HEADERS, params: { id }});
+}
+
+export function getDrafts(email) {
+    return axios.get(GET_DRAFTS_URL, { headers: HEADERS, params: { by: email }});
+}
+
+export function getSentEmails(email) {
+    return axios.get(GET_SENT_URL, { headers: HEADERS, params: { by: email }});
+}
+
+export function getReceivedEmails(email) {
+    return axios.get(GET_RECEIVED_URL, { headers: HEADERS, params: { by: email }});
+}
+
+export function getEmailList() {
+    return axios.get(GET_EMAILS_URL, HEADER_CONFIG);
+}
+
+export function getEmail(id) {
+    const GET_EMAIL_URL = `http://localhost:8000/emails/get/${id}`;
+    return axios.get(GET_EMAIL_URL, HEADER_CONFIG);
 }

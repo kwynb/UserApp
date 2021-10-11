@@ -34,73 +34,78 @@ class Email extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sender: '',
-            recipient: '',
-            subject: '',
-            message: '',
-            deliveryStatus: '',
+            sender          : '',
+            recipient       : '',
+            subject         : '',
+            message         : '',
+            deliveryStatus  : '',
 
-            mailDate: '',
-            mailTime: '',
-            mailDay: '',
+            mailDate    : '',
+            mailTime    : '',
+            mailDay     : '',
 
-            showCreate: false,
-            showMenu: false,
+            showCreate  : false,
+            showMenu    : false,
             showMailUserProfile: false,
-            showMail: false,
-            showFilter: false,
+            showMail    : false,
+            showFilter  : false,
 
-            response: '',
-            messageSent: false,
-            messageDeleted: false,
-            messageError: false,
+            response        : '',
+            messageSent     : false,
+            messageDeleted  : false,
+            messageError    : false,
 
-            chosenMenu: INBOX,
-            sort: LATEST,
-            searchTerm: '',
-            loginUser: localStorage.getItem("id"),
-            user: localStorage.getItem("user"),
-            email: localStorage.getItem("email")
+            chosenMenu  : INBOX,
+            sort        : LATEST,
+            searchTerm  : '',
+            loginUser   : localStorage.getItem("id"),
+            user        : localStorage.getItem("user"),
+            email       : localStorage.getItem("email")
         };
     }
 
     componentDidMount() {
-        getUserByUsername(this.state.user).then((res) => {
-            this.props.onGetUserByUsername(res.data);
-        }).catch((err) => console.error(err.response));
+        getUserByUsername(this.state.user)
+            .then((res) => {
+                this.props.onGetUserByUsername(res.data); })
+            .catch((err) => console.error(err.response));
+
         if (this.state.chosenMenu === INBOX) {
-            getReceivedEmails(this.state.email).then((res) => {
-                this.props.onGetReceivedEmails(res.data);
-            }).catch((err) => { console.error(err.response);});
+            getReceivedEmails(this.state.email)
+                .then((res) => {
+                    this.props.onGetReceivedEmails(res.data); })
+                .catch((err) => { console.error(err.response); });
         }
     }
 
     componentDidUpdate(prevProps, prevState,SS) {
         if (this.state.loginUser !== null) {
             if (prevProps.mails !== this.props.mails) {
+
                 if (this.state.chosenMenu === INBOX) {
-                    getReceivedEmails(this.state.email).then((res) => {
-                        this.props.onGetReceivedEmails(res.data);
-                    }).catch((err) => {
-                        console.error(err.response);
-                    });
+                    getReceivedEmails(this.state.email)
+                        .then((res) => {
+                            this.props.onGetReceivedEmails(res.data); })
+                        .catch((err) => { console.error(err.response); });
                 }
+
                 if (this.state.chosenMenu === DRAFTS) {
-                    getDrafts(this.state.email).then((res) => {
-                        this.props.onGetDrafts(res.data);
-                    }).catch((err) => {
-                        console.error(err.response);
-                    });
+                    getDrafts(this.state.email)
+                        .then((res) => {
+                            this.props.onGetDrafts(res.data); })
+                        .catch((err) => { console.error(err.response); });
                 }
+
                 if (this.state.chosenMenu === SENT) {
-                    getSentEmails(this.state.email).then((res) => {
-                        this.props.onGetSentEmails(res.data);
-                    }).catch((err) => {
-                        console.error(err.response);
-                    });
+                    getSentEmails(this.state.email)
+                        .then((res) => {
+                            this.props.onGetSentEmails(res.data); })
+                        .catch((err) => { console.error(err.response); });
                 }
+
             }
         }
+
         if (localStorage.getItem("id") === null) {
             this.props.history.push("/");
         }
@@ -140,7 +145,9 @@ class Email extends Component {
         });
         if (this.props.mail.deliveryStatus === DRAFT_STATUS) {
             updateDeliveryStatus(this.props.mail.id, "")
-                .then((res) => getEmail(res.data.id).then(res => this.props.onGetEmail(res.data)))
+                .then((res) =>
+                    getEmail(res.data.id)
+                        .then(res => this.props.onGetEmail(res.data)))
                 .catch((err)=> console.error(err.response));
             updateMail(this.props.mail.id,
                 this.props.profile.email,
@@ -149,40 +156,41 @@ class Email extends Component {
                 this.state.message,
                 DRAFT_STATUS).then(() => {
                 this.setState( {
-                    sender: '',
-                    recipient: '',
-                    subject: '',
-                    message: '',
-                    showMail: false,
-                    showCreate: false
+                    sender      : '',
+                    recipient   : '',
+                    subject     : '',
+                    message     : '',
+                    showMail    : false,
+                    showCreate  : false
                 })})
                 .catch((err) => {
                     this.setState({
-                        response: err.response.data.message,
+                        response    : err.response.data.message,
                         messageError: true,
-                        showCreate: false
+                        showCreate  : false
                     });
                 })
             return
         }
-        createMail(this.props.profile.email,
-            this.state.recipient,
-            this.state.subject,
-            this.state.message, DRAFT_STATUS)
+        createMail( this.props.profile.email,
+                    this.state.recipient,
+                    this.state.subject,
+                    this.state.message,
+                    DRAFT_STATUS )
             .then(() => {
                 this.setState({
-                    sender: '',
-                    recipient: '',
-                    subject: '',
-                    message: '',
-                    showCreate: false
+                    sender      : '',
+                    recipient   : '',
+                    subject     : '',
+                    message     : '',
+                    showCreate  : false
                 })
             })
             .catch((err) => {
                 this.setState({
-                    response: err.response.data.message,
+                    response    : err.response.data.message,
                     messageError: true,
-                    showCreate: false
+                    showCreate  : false
                 });
             })
 
@@ -194,19 +202,20 @@ class Email extends Component {
             deliveryStatus: SENT_STATUS
         });
         if (this.props.deliveryStatus === DRAFT_STATUS) {
-            updateMail(this.props.mail.id,
-                this.props.profile.email,
-                this.state.recipient,
-                this.state.subject,
-                this.state.message,
-                SENT_STATUS).then(() => {
+            updateMail( this.props.mail.id,
+                        this.props.profile.email,
+                        this.state.recipient,
+                        this.state.subject,
+                        this.state.message,
+                        SENT_STATUS )
+                .then(() => {
                     this.setState( {
-                        sender: '',
-                        recipient: '',
-                        subject: '',
-                        message: '',
-                        showCreate: false,
-                        messageSent: true
+                        sender      : '',
+                        recipient   : '',
+                        subject     : '',
+                        message     : '',
+                        showCreate  : false,
+                        messageSent : true
                     }
                 )})
                 .catch((err) => {
@@ -218,40 +227,41 @@ class Email extends Component {
                 })
             return
         }
-        createMail(this.props.profile.email,
-             this.state.recipient,
-             this.state.subject,
-             this.state.message, SENT_STATUS)
+        createMail( this.props.profile.email,
+                    this.state.recipient,
+                    this.state.subject,
+                    this.state.message,
+                    SENT_STATUS )
             .then(() => {
                 this.setState( {
-                    sender: '',
-                    recipient: '',
-                    subject: '',
-                    message: '',
-                    showCreate: false,
-                    messageSent: true
+                    sender      : '',
+                    recipient   : '',
+                    subject     : '',
+                    message     : '',
+                    showCreate  : false,
+                    messageSent : true
                 }
             )})
             .catch((err) => {
                 this.setState({
-                    response: err.response.data.message,
+                    response    : err.response.data.message,
                     messageError: true,
-                    showCreate: false
+                    showCreate  : false
                 });
             });
     }
 
     handleClose = () => {
         this.setState({
-            recipient: '',
-            sender: '',
-            subject: '',
-            message: '',
-            deliveryStatus: '',
-            messageDeleted: false,
-            messageSent: false,
-            messageError: false,
-            showCreate: false
+            recipient       : '',
+            sender          : '',
+            subject         : '',
+            message         : '',
+            deliveryStatus  : '',
+            messageDeleted  : false,
+            messageSent     : false,
+            messageError    : false,
+            showCreate      : false
         });
     }
 
@@ -261,31 +271,31 @@ class Email extends Component {
 
     showInbox = () => {
         this.setState({
-            searchTerm: '',
-            chosenMenu: INBOX,
-            sort: LATEST,
-            showMail: false,
-            showMenu: false
+            searchTerm  : '',
+            chosenMenu  : INBOX,
+            sort        : LATEST,
+            showMail    : false,
+            showMenu    : false
         });
     }
 
     showDrafts = () => {
         this.setState({
-            searchTerm: '',
-            chosenMenu: DRAFTS,
-            sort: LATEST,
-            showMail: false,
-            showMenu: false
+            searchTerm  : '',
+            chosenMenu  : DRAFTS,
+            sort        : LATEST,
+            showMail    : false,
+            showMenu    : false
         });
     }
 
     showSent = () => {
         this.setState({
-            searchTerm: '',
-            sort: LATEST,
-            chosenMenu: SENT,
-            showMail: false,
-            showMenu: false
+            searchTerm  : '',
+            sort        : LATEST,
+            chosenMenu  : SENT,
+            showMail    : false,
+            showMenu    : false
         });
     }
 
@@ -299,19 +309,19 @@ class Email extends Component {
 
     editMail = () => {
         this.setState({
-            showCreate: true,
-            recipient: this.props.mail.recipient,
-            sender: this.props.mail.sender,
-            subject: this.props.mail.subject,
-            message: this.props.mail.text,
+            showCreate  : true,
+            recipient   : this.props.mail.recipient,
+            sender      : this.props.mail.sender,
+            subject     : this.props.mail.subject,
+            message     : this.props.mail.text,
         })
     }
 
     forwardMail = () => {
         this.setState({
-            showCreate: true,
-            subject: this.props.mail.subject,
-            message: `\n\n-------\nForwarded from: <` + this.props.mail.sender + `>\n\n` + this.props.mail.text
+            showCreate  : true,
+            subject     : this.props.mail.subject,
+            message     : `\n\n-------\nForwarded from: <` + this.props.mail.sender + `>\n\n` + this.props.mail.text
         });
     }
 
@@ -322,8 +332,8 @@ class Email extends Component {
             });
         }
         this.setState({
-            showCreate: true,
-            recipient: this.props.mail.sender,
+            showCreate  : true,
+            recipient   : this.props.mail.sender,
 
         })
     }
@@ -332,14 +342,14 @@ class Email extends Component {
         deleteEmail(this.props.mail.id)
             .then((res)=>{
                 this.setState({
-                    showMail: false,
-                    response: res.data.message,
+                    showMail    : false,
+                    response    : res.data.message,
                     messageDeleted: true,
                 })
             }).catch((err) => {
             this.setState({
-                showMail: true,
-                response: err.response.data.message,
+                showMail    : true,
+                response    : err.response.data.message,
                 messageError: true
             })
         });
@@ -356,15 +366,15 @@ class Email extends Component {
 
     filterOldest = () => {
         this.setState({
-            sort: OLDEST,
-            showFilter: false
+            sort        : OLDEST,
+            showFilter  : false
         });
     }
 
     filterLatest = () => {
         this.setState({
-            sort: LATEST,
-            showFilter: false
+            sort        : LATEST,
+            showFilter  : false
         });
     }
 
@@ -412,18 +422,20 @@ class Email extends Component {
                        })
                        .catch();
                    if (this.state.chosenMenu === INBOX) {
-                   getUserByEmail(mail.sender).then((res) => {
-                       this.props.onGetUserByEmail(res.data);
-                   }).catch((err)=> console.error(err.response));
+                   getUserByEmail(mail.sender)
+                       .then((res) => {
+                            this.props.onGetUserByEmail(res.data); })
+                       .catch((err)=> console.error(err.response));
                    updateUnreadStatus(mail.id, false)
                        .then((res) => {
                            getEmail(res.data.id).then(res => this.props.onGetEmail(res.data))})
                        .catch((err)=> console.error(err.response));
                }
                if (this.state.chosenMenu !== INBOX) {
-                   getUserByEmail(mail.recipient).then((res) => {
-                       this.props.onGetUserByEmail(res.data);
-                   }).catch((err) => console.error(err.response));
+                   getUserByEmail(mail.recipient)
+                       .then((res) => {
+                            this.props.onGetUserByEmail(res.data); })
+                       .catch((err) => console.error(err.response));
                }
                const mailDateTime = mail.lastModified;
                const mailDate = mailDateTime.substr(0, 11).split("/").reverse();
@@ -467,23 +479,23 @@ class Email extends Component {
                         {this.state.messageSent && <MailSent handleClose={this.handleClose}/>}
                         {this.state.messageError &&
                             <MailError responses={{
-                                        messageDeleted: this.state.messageDeleted,
-                                        messageSent: this.state.messageSent
+                                        messageDeleted  : this.state.messageDeleted,
+                                        messageSent     : this.state.messageSent
                                         }}
                                        deliveryStatus={this.state.deliveryStatus}
                                        handleClose={this.handleClose}/>}
                         {this.state.showCreate &&
                             <CreateMessage mailSet={{
-                                                recipient: this.state.recipient,
-                                                subject: this.state.subject,
-                                                message: this.state.message
+                                                recipient   : this.state.recipient,
+                                                subject     : this.state.subject,
+                                                message     : this.state.message
                                             }} handlers={{
-                                               handleRecipient: this.handleRecipient,
-                                               handleSubject: this.handleSubject,
-                                               handleMessage: this.handleMessage,
-                                               handleDraft: this.handleDraft,
-                                               handleSend: this.handleSend,
-                                               handleClose: this.handleClose
+                                               handleRecipient  : this.handleRecipient,
+                                               handleSubject    : this.handleSubject,
+                                               handleMessage    : this.handleMessage,
+                                               handleDraft      : this.handleDraft,
+                                               handleSend       : this.handleSend,
+                                               handleClose      : this.handleClose
                                             }}/>}
                         {this.state.showMailUserProfile && <MailUserProfile/>}
                         <div className="card-body">
@@ -532,20 +544,21 @@ class Email extends Component {
                                                     <div>{this.props.mails.length !== 0 &&
                                                         <div className="mt-1">
                                                             <Mail states={{
-                                                                time: this.state.mailTime,
-                                                                date: this.state.mailDate,
-                                                                day: this.state.mailDay,
-                                                                showMail: this.state.showMail,
-                                                                showMailUser: this.state.showMailUserProfile,
-                                                                chosenMenu: this.state.chosenMenu
-                                                                }} functions={{
-                                                                showUser: this.showMailUser,
-                                                                hideUser: this.hideMailUser,
-                                                                handleClose: this.exitMail,
-                                                                handleEdit: this.editMail,
-                                                                handleReply: this.replyMail,
-                                                                handleDelete: this.deleteMail,
-                                                                handleForward: this.forwardMail
+                                                                    time            : this.state.mailTime,
+                                                                    date            : this.state.mailDate,
+                                                                    day             : this.state.mailDay,
+                                                                    showMail        : this.state.showMail,
+                                                                    showMailUser    : this.state.showMailUserProfile,
+                                                                    chosenMenu      : this.state.chosenMenu
+                                                                }}
+                                                                  functions={{
+                                                                    showUser        : this.showMailUser,
+                                                                    hideUser        : this.hideMailUser,
+                                                                    handleClose     : this.exitMail,
+                                                                    handleEdit      : this.editMail,
+                                                                    handleReply     : this.replyMail,
+                                                                    handleDelete    : this.deleteMail,
+                                                                    handleForward   : this.forwardMail
                                                                 }} />
                                                         </div>}
                                                     </div>
@@ -566,10 +579,10 @@ class Email extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        login: state.login.user,
-        profile: state.users.user,
-        mails: state.emails.emails,
-        mail: state.emails.email,
+        login   : state.login.user,
+        profile : state.users.user,
+        mails   : state.emails.emails,
+        mail    : state.emails.email,
         mailUser: state.mailUsers.mailUser
     };
 };

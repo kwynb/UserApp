@@ -42,8 +42,8 @@ class MailList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        mails: state.emails.emails,
-        user: state.users.user
+        mails   : state.emails.emails,
+        user    : state.users.user
     };
 };
 

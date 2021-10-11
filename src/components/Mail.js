@@ -59,8 +59,8 @@ class Mail extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-        mailUser: state.mailUsers.mailUser,
-        mail: state.emails.email
+        mailUser  : state.mailUsers.mailUser,
+        mail      : state.emails.email
     };
 };
 
